@@ -32,3 +32,22 @@ def get_project(project_id: UUID) -> Project:
         raise ProjectNotFoundError()
 
     return project
+
+
+def update_project(
+    project_id: UUID, title: str | None = None, description: str | None = None
+) -> Project:
+    project = db.session.get(Project, project_id)
+
+    if project is None:
+        raise ProjectNotFoundError()
+
+    if title is not None:
+        project.title = title
+
+    if description is not None:
+        project.description = description
+
+    db.session.commit()
+
+    return project

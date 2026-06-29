@@ -21,3 +21,15 @@ class ProjectResponseSchema(Schema):
     description = fields.String(allow_none=True)
 
     memory_dataset_id = fields.String(allow_none=True)
+
+
+class ProjectUpdateSchema(Schema):
+    title = fields.String(
+        required=False,
+        validate=validate.Length(min=1, max=255),
+    )
+
+    description = fields.String(
+        required=False,
+        allow_none=True,
+    )
