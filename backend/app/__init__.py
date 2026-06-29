@@ -1,9 +1,16 @@
 from flask import Flask
-from sqlalchemy import text
 
-from app import models
 from app.config import Config
 from app.extensions import db, migrate
+
+
+def register_extensions(app: Flask):
+    db.init_app(app)
+    migrate.init_app(app, db)
+
+
+def register_models():
+    import app.models
 
 
 def create_app():
@@ -11,11 +18,8 @@ def create_app():
 
     app.config.from_object(Config)
 
-    db.init_app(app)
-    migrate.init_app(app, db)
-
-    with app.app_context():
-        db.session.execute(text("SELECT 1"))
+    register_extensions(app)
+    register_models()
 
     @app.get("/")
     def home():
