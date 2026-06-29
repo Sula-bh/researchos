@@ -1,7 +1,24 @@
-from flask import Blueprint
+from flask import Blueprint, request
+
+from app.schemas.project_schema import ProjectCreateSchema, ProjectResponseSchema
+from app.services.project_service import create_project
 
 project_bp = Blueprint(
     "projects",
     __name__,
     url_prefix="/api/projects",
 )
+
+project_create_schema = ProjectCreateSchema()
+response_schema = ProjectResponseSchema()
+
+@project_bp.post("")
+def create():
+    data = project_create_schema.load(request.get_json())
+
+    project = create_project(
+        title=data["title"],
+        description=data.get("description"),
+    )
+
+    return response_schema.dump(project), 201
