@@ -23,10 +23,10 @@ def create_app():
 
     app.config.from_object(Config)
 
-    register_extensions(app)
     register_models()
     register_extensions(app)
     register_error_handlers(app)
+    register_blueprints(app)
 
     @app.get("/")
     def home():
