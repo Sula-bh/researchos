@@ -2,6 +2,7 @@ from http import HTTPStatus
 
 from flask import Flask
 from marshmallow import ValidationError
+from werkzeug.exceptions import HTTPException
 
 from app.exceptions.base import ResearchOSError
 from app.responses import error_response
@@ -23,4 +24,12 @@ def register_error_handlers(app: Flask) -> None:
             error_type="ValidationError",
             message=error.messages,
             status=HTTPStatus.BAD_REQUEST,
+        )
+    
+    @app.errorhandler(HTTPException)
+    def handle_http_exception(error: HTTPException):
+        return error_response(
+            error_type=error.__class__.__name__,
+            message=error.description,
+            status=HTTPStatus(error.code),
         )
