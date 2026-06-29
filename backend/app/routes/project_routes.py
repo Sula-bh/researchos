@@ -1,10 +1,11 @@
 from http import HTTPStatus
+from uuid import UUID
 
 from flask import Blueprint, request
 
 from app.responses import success_response
 from app.schemas.project_schema import ProjectCreateSchema, ProjectResponseSchema
-from app.services.project_service import create_project, get_projects
+from app.services import project_service
 
 project_bp = Blueprint(
     "projects",
@@ -17,10 +18,10 @@ project_response_schema = ProjectResponseSchema()
 
 
 @project_bp.post("")
-def create():
+def create_project():
     data = project_create_schema.load(request.get_json())
 
-    project = create_project(
+    project = project_service.create_project(
         title=data["title"],
         description=data.get("description"),
     )
@@ -32,9 +33,17 @@ def create():
     )
 
 @project_bp.get("")
-def get_all():
-    projects = get_projects()
+def get_projects():
+    projects = project_service.get_projects()
 
     return success_response(
         data=project_response_schema.dump(projects, many=True),
+    )
+
+@project_bp.get("/<uuid:project_id>")
+def get_project(project_id: UUID):
+    project = project_service.get_project(project_id)
+
+    return success_response(
+        data=project_response_schema.dump(project),
     )
