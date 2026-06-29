@@ -1,7 +1,10 @@
+from http import HTTPStatus
+
+
 class ResearchOSError(Exception):
     """Base exception for all application errors."""
 
-    status_code = 500
+    status_code = HTTPStatus.INTERNAL_SERVER_ERROR
 
     message = "An unexpected error occurred."
 
