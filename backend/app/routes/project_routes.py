@@ -2,6 +2,7 @@ from http import HTTPStatus
 
 from flask import Blueprint, request
 
+from app.responses import success_response
 from app.schemas.project_schema import ProjectCreateSchema, ProjectResponseSchema
 from app.services.project_service import create_project
 
@@ -24,7 +25,8 @@ def create():
         description=data.get("description"),
     )
 
-    return (
-        project_response_schema.dump(project),
-        HTTPStatus.CREATED,
+    return success_response(
+        data=project_response_schema.dump(project),
+        message="Project created successfully.",
+        status=HTTPStatus.CREATED,
     )

@@ -3,8 +3,8 @@ from http import HTTPStatus
 from flask import Flask
 from marshmallow import ValidationError
 
-from app.errors.responses import error_response
 from app.exceptions.base import ResearchOSError
+from app.responses import error_response
 
 
 def register_error_handlers(app: Flask) -> None:
