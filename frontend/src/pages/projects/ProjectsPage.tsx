@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
 import { getProjects } from "@/api/projectApi";
+import ProjectCard from "./components/ProjectCard";
 import type { Project } from "@/types/project";
-import ProjectCard from "@/pages/projects/components/ProjectCard";
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -21,12 +21,18 @@ export default function ProjectsPage() {
   }, []);
 
   return (
-    <div>
-      <h1>Projects</h1>
+    <main className="mx-auto max-w-7xl p-8">
+      <h1 className="text-3xl font-bold">Projects</h1>
 
-      {projects.map((project) => (
-        <ProjectCard key={project.id} project={project} />
-      ))}
-    </div>
+      <div className="mt-8">
+        {projects.length === 0 ? (
+          <p>No projects yet.</p>
+        ) : (
+          projects.map((project) => (
+            <ProjectCard key={project.id} project={project} />
+          ))
+        )}
+      </div>
+    </main>
   );
 }
