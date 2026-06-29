@@ -1,6 +1,7 @@
 from flask import Flask
 from sqlalchemy import text
 
+from app import models
 from app.config import Config
 from app.extensions import db, migrate
 
