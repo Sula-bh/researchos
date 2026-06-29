@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from flask import Blueprint, request
 
 from app.schemas.project_schema import ProjectCreateSchema, ProjectResponseSchema
@@ -10,7 +12,8 @@ project_bp = Blueprint(
 )
 
 project_create_schema = ProjectCreateSchema()
-response_schema = ProjectResponseSchema()
+project_response_schema = ProjectResponseSchema()
+
 
 @project_bp.post("")
 def create():
@@ -21,4 +24,7 @@ def create():
         description=data.get("description"),
     )
 
-    return response_schema.dump(project), 201
+    return (
+        project_response_schema.dump(project),
+        HTTPStatus.CREATED,
+    )
