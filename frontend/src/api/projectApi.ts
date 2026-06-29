@@ -6,3 +6,9 @@ export async function getProjects() {
 
   return response.data.data as Project[];
 }
+
+export async function getProject(projectId: string) {
+  const response = await api.get(`/projects/${projectId}`);
+
+  return response.data.data;
+}
