@@ -2,7 +2,7 @@ from sqlalchemy import String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.extensions import db
-from backend.app.models.mixins import TimestampMixin, UUIDMixin
+from app.models.mixins import TimestampMixin, UUIDMixin
 
 
 class Project(UUIDMixin, TimestampMixin, db.Model):
