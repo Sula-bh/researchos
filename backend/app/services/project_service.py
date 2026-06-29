@@ -51,3 +51,13 @@ def update_project(
     db.session.commit()
 
     return project
+
+
+def delete_project(project_id: UUID) -> None:
+    project = db.session.get(Project, project_id)
+
+    if project is None:
+        raise ProjectNotFoundError()
+
+    db.session.delete(project)
+    db.session.commit()

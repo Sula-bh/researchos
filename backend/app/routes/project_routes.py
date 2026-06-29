@@ -70,3 +70,12 @@ def update_project(project_id: UUID):
         data=project_response_schema.dump(project),
         message="Project updated successfully.",
     )
+
+
+@project_bp.delete("/<uuid:project_id>")
+def delete_project(project_id: UUID):
+    project_service.delete_project(project_id)
+
+    return success_response(
+        message="Project deleted successfully.",
+    )
