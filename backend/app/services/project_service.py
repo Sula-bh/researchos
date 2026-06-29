@@ -12,3 +12,6 @@ def create_project(title: str, description: str | None = None) -> Project:
     db.session.commit()
 
     return project
+
+def get_projects() -> list[Project]:
+    return Project.query.order_by(Project.created_at.desc()).all()

@@ -4,7 +4,7 @@ from flask import Blueprint, request
 
 from app.responses import success_response
 from app.schemas.project_schema import ProjectCreateSchema, ProjectResponseSchema
-from app.services.project_service import create_project
+from app.services.project_service import create_project, get_projects
 
 project_bp = Blueprint(
     "projects",
@@ -29,4 +29,12 @@ def create():
         data=project_response_schema.dump(project),
         message="Project created successfully.",
         status=HTTPStatus.CREATED,
+    )
+
+@project_bp.get("")
+def get_all():
+    projects = get_projects()
+
+    return success_response(
+        data=project_response_schema.dump(projects, many=True),
     )
