@@ -1,43 +1,25 @@
-import uuid
-from datetime import UTC, datetime
+from sqlalchemy import String, Text
+from sqlalchemy.orm import Mapped, mapped_column
 
 from app.extensions import db
+from backend.app.models.mixins import TimestampMixin, UUIDMixin
 
 
-class Project(db.Model):
+class Project(UUIDMixin, TimestampMixin, db.Model):
     __tablename__ = "projects"
 
-    id = db.Column(
-        db.UUID(as_uuid=True),
-        primary_key=True,
-        default=uuid.uuid4,
-    )
-
-    title = db.Column(
-        db.String(255),
+    title: Mapped[str] = mapped_column(
+        String(255),
         nullable=False,
     )
 
-    description = db.Column(
-        db.Text,
+    description: Mapped[str | None] = mapped_column(
+        Text,
         nullable=True,
     )
 
-    memory_dataset_id = db.Column(
-        db.String(255),
+    memory_dataset_id: Mapped[str | None] = mapped_column(
+        String(255),
         unique=True,
         nullable=True,
-    )
-
-    created_at = db.Column(
-        db.DateTime(timezone=True),
-        default=lambda: datetime.now(UTC),
-        nullable=False,
-    )
-
-    updated_at = db.Column(
-        db.DateTime(timezone=True),
-        default=lambda: datetime.now(UTC),
-        onupdate=lambda: datetime.now(UTC),
-        nullable=False,
     )
