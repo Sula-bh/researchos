@@ -2,13 +2,14 @@ from flask import Flask
 
 from app.config import Config
 from app.error_handlers import register_error_handlers
-from app.extensions import db, migrate
+from app.extensions import cors, db, migrate
 from app.routes.project_routes import project_bp
 
 
 def register_extensions(app: Flask):
     db.init_app(app)
     migrate.init_app(app, db)
+    cors.init_app(app)
 
 
 def register_models():
