@@ -3,6 +3,7 @@ from flask import Flask
 from app.config import Config
 from app.error_handlers import register_error_handlers
 from app.extensions import cors, db, migrate
+from app.routes.note_routes import note_bp
 from app.routes.paper_routes import paper_bp
 from app.routes.project_routes import project_bp
 
@@ -18,7 +19,8 @@ def register_models():
 
 def register_blueprints(app: Flask):
     app.register_blueprint(project_bp)
-    app.register_blueprint(paper_bp, url_prefix="/api",)
+    app.register_blueprint(paper_bp)
+    app.register_blueprint(note_bp)
 
 
 def create_app():

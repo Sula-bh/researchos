@@ -8,7 +8,7 @@ from app.responses import success_response
 from app.schemas.paper_schema import PaperResponseSchema
 from app.services import paper_service
 
-paper_bp = Blueprint("papers", __name__)
+paper_bp = Blueprint("papers", __name__, url_prefix="/api")
 
 paper_response_schema = PaperResponseSchema(many=True)
 single_paper_schema = PaperResponseSchema()
