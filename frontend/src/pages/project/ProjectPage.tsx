@@ -28,13 +28,13 @@ export default function ProjectPage() {
   }, [projectId]);
 
   return (
-    <main className="flex h-screen">
+    <main className="flex h-screen overflow-hidden">
       <ProjectSidebar project={project} />
 
-      <section className="flex flex-1 flex-col">
+      <section className="flex min-w-0 flex-1 flex-col">
         <ProjectHeader project={project} />
 
-        <main className="flex-1 p-8">
+        <main className="flex-1 overflow-y-auto p-8">
           <Outlet />
         </main>
       </section>
