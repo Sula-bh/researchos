@@ -7,6 +7,12 @@ export async function getNotes(projectId: string): Promise<Note[]> {
   return response.data.data as Note[];
 }
 
+export async function getNote(noteId: string): Promise<Note> {
+  const response = await api.get(`/notes/${noteId}`);
+
+  return response.data.data as Note;
+}
+
 export async function createNote(
   projectId: string,
   data: {
