@@ -72,12 +72,16 @@ export default function ProjectSidebar({ project }: ProjectSidebarProps) {
       {/* Current Project */}
 
       <div className="border-b p-4">
-        <button className="flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm font-medium transition-colors hover:bg-muted">
-          <span className="truncate">{project?.title ?? "Loading..."}</span>
+        <button className="flex w-full items-center justify-between rounded-lg border px-3 py-2 transition-colors hover:bg-muted">
+          <div className="text-left">
+            <p className="truncate font-medium">
+              {project?.title ?? "Loading..."}
+            </p>
 
-          <span>
-            <ChevronsUpDown className="h-4 w-4" />
-          </span>
+            <p className="text-xs text-muted-foreground">Current project</p>
+          </div>
+
+          <ChevronsUpDown className="h-4 w-4 text-muted-foreground" />
         </button>
       </div>
 
@@ -90,11 +94,14 @@ export default function ProjectSidebar({ project }: ProjectSidebarProps) {
             to={to}
             end={to === ""}
             className={({ isActive }) =>
-              `flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+              `
+              flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all
+              ${
                 isActive
-                  ? "bg-primary text-primary-foreground"
+                  ? "bg-primary text-primary-foreground shadow-sm shadow-black/50"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
-              }`
+              }
+              `
             }
           >
             <Icon className="h-4 w-4" />
