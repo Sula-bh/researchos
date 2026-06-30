@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
+from uuid import UUID
 
 from sqlalchemy import ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -15,7 +16,7 @@ if TYPE_CHECKING:
 class Paper(UUIDMixin, TimestampMixin, db.Model):
     __tablename__ = "papers"
 
-    project_id: Mapped[str] = mapped_column(
+    project_id: Mapped[UUID] = mapped_column(
         ForeignKey("projects.id"),
         nullable=False,
     )

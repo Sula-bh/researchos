@@ -13,6 +13,7 @@ paper_bp = Blueprint("papers", __name__)
 paper_response_schema = PaperResponseSchema(many=True)
 single_paper_schema = PaperResponseSchema()
 
+
 @paper_bp.get("/projects/<uuid:project_id>/papers")
 def get_papers(project_id: UUID):
     papers = paper_service.get_papers(project_id)
@@ -20,6 +21,7 @@ def get_papers(project_id: UUID):
     return success_response(
         data=paper_response_schema.dump(papers),
     )
+
 
 @paper_bp.get("/papers/<uuid:paper_id>")
 def get_paper(paper_id: UUID):
@@ -29,17 +31,14 @@ def get_paper(paper_id: UUID):
         data=single_paper_schema.dump(paper),
     )
 
-@paper_bp.delete("/papers/<uuid:paper_id>")
-def delete_paper(paper_id: UUID):
-    paper_service.delete_paper(paper_id)
 
-    return success_response(
-        message="Paper deleted successfully.",
-    )
+@paper_bp.get("/papers/<uuid:paper_id>/download")
+def download_paper(paper_id: UUID):
+    return paper_service.download_paper(paper_id)
+
 
 @paper_bp.post("/projects/<uuid:project_id>/papers")
 def upload_paper(project_id: UUID):
-
     file = request.files.get("file")
 
     if file is None:
@@ -54,4 +53,13 @@ def upload_paper(project_id: UUID):
         data=single_paper_schema.dump(paper),
         message="Paper uploaded successfully.",
         status=HTTPStatus.CREATED,
+    )
+
+
+@paper_bp.delete("/papers/<uuid:paper_id>")
+def delete_paper(paper_id: UUID):
+    paper_service.delete_paper(paper_id)
+
+    return success_response(
+        message="Paper deleted successfully.",
     )

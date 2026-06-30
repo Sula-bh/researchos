@@ -1,13 +1,20 @@
 from uuid import UUID
 
+from flask import send_file
 from sqlalchemy import select
 from werkzeug.datastructures import FileStorage
 
+from app.exceptions.file import InvalidFileError
 from app.exceptions.paper import PaperNotFoundError
 from app.extensions import db
 from app.models.paper import Paper
 from app.services.pdf_service import extract_metadata
-from app.services.storage_service import save_pdf
+from app.services.storage_service import (
+    delete_file,
+    file_exists,
+    get_file_path,
+    save_pdf,
+)
 
 
 def get_papers(project_id: UUID) -> list[Paper]:
@@ -29,15 +36,7 @@ def get_paper(paper_id: UUID) -> Paper:
     return paper
 
 
-def delete_paper(paper_id: UUID) -> None:
-    paper = get_paper(paper_id)
-
-    db.session.delete(paper)
-    db.session.commit()
-
-
 def upload_paper(project_id: UUID, file: FileStorage) -> Paper:
-
     storage_key, file_name = save_pdf(
         str(project_id),
         file,
@@ -58,3 +57,26 @@ def upload_paper(project_id: UUID, file: FileStorage) -> Paper:
     db.session.commit()
 
     return paper
+
+
+def delete_paper(paper_id: UUID) -> None:
+    paper = get_paper(paper_id)
+
+    delete_file(paper.storage_key)
+
+    db.session.delete(paper)
+    db.session.commit()
+
+
+def download_paper(paper_id: UUID):
+    paper = get_paper(paper_id)
+
+    if not file_exists(paper.storage_key):
+        raise InvalidFileError("Paper file not found.")
+
+    return send_file(
+        get_file_path(paper.storage_key),
+        mimetype="application/pdf",
+        download_name=paper.file_name,
+        as_attachment=False,
+    )
