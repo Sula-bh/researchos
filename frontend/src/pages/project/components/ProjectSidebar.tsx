@@ -9,7 +9,7 @@ import {
   Settings,
   ChevronsUpDown,
 } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 import type { Project } from "@/types/project";
 
@@ -60,9 +60,14 @@ export default function ProjectSidebar({ project }: ProjectSidebarProps) {
     <aside className="flex h-screen w-64 flex-col border-r bg-background">
       {/* Logo */}
 
-      <div className="border-b p-6">
-        <h1 className="text-xl font-bold tracking-tight">ResearchOS</h1>
-      </div>
+      <Link
+        to="/"
+        className="flex items-center gap-2 px-6 py-5 border-b hover:bg-muted/50 transition-colors"
+      >
+        <BrainCircuit className="h-6 w-6 text-primary" />
+
+        <span className="text-lg font-bold tracking-tight">ResearchOS</span>
+      </Link>
 
       {/* Current Project */}
 
