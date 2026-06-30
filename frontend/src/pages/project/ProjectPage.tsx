@@ -4,7 +4,6 @@ import { Outlet, useParams } from "react-router-dom";
 import { getProject } from "@/api/projectApi";
 import ProjectSidebar from "./components/ProjectSidebar";
 import type { Project } from "@/types/project";
-import ProjectHeader from "./components/ProjectHeader";
 
 export default function ProjectPage() {
   const { projectId } = useParams();
@@ -31,13 +30,9 @@ export default function ProjectPage() {
     <main className="flex h-screen overflow-hidden">
       <ProjectSidebar project={project} />
 
-      <section className="flex min-w-0 flex-1 flex-col">
-        <ProjectHeader project={project} />
-
-        <main className="flex-1 overflow-y-auto p-8">
-          <Outlet />
-        </main>
-      </section>
+      <main className="flex-1 overflow-y-auto p-8">
+        <Outlet />
+      </main>
     </main>
   );
 }
