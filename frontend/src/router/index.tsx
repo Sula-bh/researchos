@@ -9,6 +9,7 @@ import NotesPage from "@/pages/project/NotesPage";
 import TimelinePage from "@/pages/project/TimelinePage";
 import ExperimentsPage from "@/pages/project/ExperimentsPage";
 import KnowledgeGraphPage from "@/pages/project/KnowledgeGraphPage";
+import PaperDetailsPage from "@/pages/project/paper/PaperDetailsPage";
 
 export const router = createBrowserRouter([
   {
@@ -25,7 +26,16 @@ export const router = createBrowserRouter([
       },
       {
         path: "papers",
-        element: <PapersPage />,
+        children: [
+          {
+            index: true,
+            element: <PapersPage />,
+          },
+          {
+            path: ":paperId",
+            element: <PaperDetailsPage />,
+          },
+        ],
       },
       {
         path: "chat",
