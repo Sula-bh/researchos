@@ -5,7 +5,8 @@ import ProjectPage from "@/pages/project/ProjectPage";
 import ProjectsPage from "@/pages/projects/ProjectsPage";
 import ChatPage from "@/pages/project/ChatPage";
 import PapersPage from "@/pages/project/papers/PapersPage";
-import NotesPage from "@/pages/project/NotesPage";
+import NotesPage from "@/pages/project/notes/NotesPage";
+import NoteEditorPage from "@/pages/project/notes/NoteEditorPage";
 import TimelinePage from "@/pages/project/TimelinePage";
 import ExperimentsPage from "@/pages/project/ExperimentsPage";
 import KnowledgeGraphPage from "@/pages/project/KnowledgeGraphPage";
@@ -44,6 +45,14 @@ export const router = createBrowserRouter([
       {
         path: "notes",
         element: <NotesPage />,
+      },
+      {
+        path: "notes/new",
+        element: <NoteEditorPage />,
+      },
+      {
+        path: "notes/:noteId",
+        element: <NoteEditorPage />,
       },
       {
         path: "timeline",
