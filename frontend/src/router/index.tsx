@@ -4,7 +4,7 @@ import OverviewPage from "@/pages/project/OverviewPage";
 import ProjectPage from "@/pages/project/ProjectPage";
 import ProjectsPage from "@/pages/projects/ProjectsPage";
 import ChatPage from "@/pages/project/ChatPage";
-import PapersPage from "@/pages/project/PapersPage";
+import PapersPage from "@/pages/project/papers/PapersPage";
 import NotesPage from "@/pages/project/NotesPage";
 import TimelinePage from "@/pages/project/TimelinePage";
 import ExperimentsPage from "@/pages/project/ExperimentsPage";
