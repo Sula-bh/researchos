@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import { createProject, type CreateProjectRequest } from "@/api/projectApi";
+import { createProject } from "@/api/projectApi";
 import { getErrorMessage } from "@/lib/error";
 import { projectSchema, type ProjectFormValues } from "@/schemas/projectSchema";
 
@@ -50,7 +50,7 @@ export default function CreateProjectDialog({
 
   async function onSubmit(values: ProjectFormValues) {
     try {
-      await createProject(values as CreateProjectRequest);
+      await createProject(values);
 
       toast.success("Project created successfully.");
 
