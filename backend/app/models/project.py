@@ -9,6 +9,7 @@ from app.extensions import db
 from app.models.mixins import TimestampMixin, UUIDMixin
 
 if TYPE_CHECKING:
+    from app.models.note import Note
     from app.models.paper import Paper
 
 class Project(UUIDMixin, TimestampMixin, db.Model):
@@ -31,6 +32,11 @@ class Project(UUIDMixin, TimestampMixin, db.Model):
     )
 
     papers: Mapped[list[Paper]] = relationship(
+        back_populates="project",
+        cascade="all, delete-orphan",
+    )
+
+    notes: Mapped[list[Note]] = relationship(
         back_populates="project",
         cascade="all, delete-orphan",
     )
