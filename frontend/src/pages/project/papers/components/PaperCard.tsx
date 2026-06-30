@@ -1,7 +1,7 @@
-import { FileText, MoreVertical, Trash2, ExternalLink } from "lucide-react";
+import { ExternalLink, FileText, MoreVertical, Trash2 } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,15 +9,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { Button } from "@/components/ui/button";
-
 import type { Paper } from "@/types/paper";
 
 type PaperCardProps = {
   paper: Paper;
+  onDelete: (id: string) => void;
 };
 
-export default function PaperCard({ paper }: PaperCardProps) {
+export default function PaperCard({ paper, onDelete }: PaperCardProps) {
   return (
     <Card className="transition-all hover:shadow-md">
       <CardContent className="flex items-start justify-between p-5">
@@ -34,7 +33,12 @@ export default function PaperCard({ paper }: PaperCardProps) {
             </p>
 
             <p className="text-xs text-muted-foreground">
-              Uploaded {new Date(paper.created_at).toLocaleDateString()}
+              Uploaded{" "}
+              {new Date(paper.created_at).toLocaleDateString(undefined, {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              })}
             </p>
           </div>
         </div>
@@ -52,7 +56,10 @@ export default function PaperCard({ paper }: PaperCardProps) {
               Open PDF
             </DropdownMenuItem>
 
-            <DropdownMenuItem className="text-destructive">
+            <DropdownMenuItem
+              onClick={() => onDelete(paper.id)}
+              className="text-destructive"
+            >
               <Trash2 className="mr-2 h-4 w-4" />
               Delete
             </DropdownMenuItem>
