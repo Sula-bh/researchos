@@ -1,40 +1,62 @@
 import { useEffect, useState } from "react";
-import { FileText, Plus, Search } from "lucide-react";
+import { FileText, Search } from "lucide-react";
 import { useParams } from "react-router-dom";
 
-import { getPapers } from "@/api/paperApi";
-import { Button } from "@/components/ui/button";
+import { getPapers, uploadPaper } from "@/api/paperApi";
 import { Input } from "@/components/ui/input";
 import type { Paper } from "@/types/paper";
 
 import PaperCard from "./components/PaperCard";
+import UploadPaperButton from "./components/UploadPaperButton";
 
 export default function PapersPage() {
   const { projectId } = useParams();
 
   const [papers, setPapers] = useState<Paper[]>([]);
+  const [uploading, setUploading] = useState(false);
+
+  async function loadPapers(id: string) {
+    try {
+      const data = await getPapers(id);
+      setPapers(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   useEffect(() => {
     if (!projectId) return;
 
-    const id = projectId;
-
-    async function fetchPapers() {
-      try {
-        const data = await getPapers(id);
-        setPapers(data);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    fetchPapers();
+    loadPapers(projectId);
   }, [projectId]);
+
+  async function handleUpload(file: File) {
+    if (!projectId) return;
+
+    try {
+      console.log("1. Starting upload");
+      setUploading(true);
+
+      const paper = await uploadPaper(projectId, file);
+      console.log("2. Backend response");
+      console.log(paper);
+
+      setPapers((previous) => {
+        console.log("3. Updating state");
+        return [paper, ...previous];
+      });
+      console.log("4. Upload complete");
+    } catch (error) {
+      console.error(error);
+    } finally {
+      console.log("5. Finally");
+      setUploading(false);
+    }
+  }
 
   return (
     <div className="space-y-8">
       {/* Header */}
-
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Papers</h1>
@@ -44,14 +66,10 @@ export default function PapersPage() {
           </p>
         </div>
 
-        <Button>
-          <Plus className="mr-2 h-4 w-4" />
-          Upload Paper
-        </Button>
+        <UploadPaperButton onUpload={handleUpload} loading={uploading} />
       </div>
 
       {/* Search */}
-
       <div className="relative">
         <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
 
@@ -59,7 +77,6 @@ export default function PapersPage() {
       </div>
 
       {/* Paper List */}
-
       {papers.length === 0 ? (
         <div className="flex flex-col items-center rounded-xl border border-dashed py-20">
           <FileText className="mb-4 h-12 w-12 text-muted-foreground" />
@@ -70,10 +87,9 @@ export default function PapersPage() {
             Upload your first paper to start building your research memory.
           </p>
 
-          <Button className="mt-6">
-            <Plus className="mr-2 h-4 w-4" />
-            Upload Paper
-          </Button>
+          <div className="mt-6">
+            <UploadPaperButton onUpload={handleUpload} loading={uploading} />
+          </div>
         </div>
       ) : (
         <div className="space-y-4">
