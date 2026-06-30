@@ -1,9 +1,15 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from sqlalchemy import String, Text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.extensions import db
 from app.models.mixins import TimestampMixin, UUIDMixin
 
+if TYPE_CHECKING:
+    from app.models.paper import Paper
 
 class Project(UUIDMixin, TimestampMixin, db.Model):
     __tablename__ = "projects"
@@ -22,4 +28,9 @@ class Project(UUIDMixin, TimestampMixin, db.Model):
         String(255),
         unique=True,
         nullable=True,
+    )
+
+    papers: Mapped[list[Paper]] = relationship(
+        back_populates="project",
+        cascade="all, delete-orphan",
     )
