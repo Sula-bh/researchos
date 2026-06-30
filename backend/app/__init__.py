@@ -26,6 +26,11 @@ def create_app():
 
     app.config.from_object(Config)
 
+    app.config["UPLOAD_DIR"].mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
     register_models()
     register_extensions(app)
     register_error_handlers(app)
