@@ -6,6 +6,8 @@ from uuid import uuid4
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
+from app.exceptions.file import InvalidFileError
+
 UPLOAD_DIR = Path("uploads")
 
 
@@ -21,7 +23,7 @@ def save_pdf(project_id: str, file: FileStorage) -> tuple[str, str]:
     extension = Path(original_name).suffix.lower()
 
     if extension != ".pdf":
-        raise ValueError("Only PDF files are allowed.")
+        raise InvalidFileError("Only PDF files are allowed.")
 
     folder = UPLOAD_DIR / project_id
     folder.mkdir(parents=True, exist_ok=True)
