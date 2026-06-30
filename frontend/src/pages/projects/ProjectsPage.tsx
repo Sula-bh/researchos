@@ -10,9 +10,11 @@ import ProjectCard from "./components/ProjectCard";
 
 import EditProjectDialog from "./components/EditProjectDialog";
 import DeleteProjectDialog from "./components/DeleteProjectDialog";
+import ProjectCardSkeleton from "./components/ProjectCardSkeleton";
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
 
   const [editingProject, setEditingProject] = useState<Project | null>(null);
@@ -21,10 +23,13 @@ export default function ProjectsPage() {
 
   async function loadProjects() {
     try {
+      setLoading(true);
       const data = await getProjects();
       setProjects(data);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -74,7 +79,13 @@ export default function ProjectsPage() {
       {/* Content */}
 
       <div className="mt-8">
-        {filteredProjects.length === 0 ? (
+        {loading ? (
+          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <ProjectCardSkeleton key={index} />
+            ))}
+          </div>
+        ) : filteredProjects.length === 0 ? (
           projects.length === 0 ? (
             <div className="flex flex-col items-center rounded-xl border border-dashed py-20">
               <div className="rounded-full bg-primary/10 p-4">
@@ -110,7 +121,7 @@ export default function ProjectsPage() {
             </div>
           )
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
             {filteredProjects.map((project) => (
               <ProjectCard
                 key={project.id}
