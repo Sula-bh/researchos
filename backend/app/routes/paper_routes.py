@@ -1,7 +1,9 @@
+from http import HTTPStatus
 from uuid import UUID
 
-from flask import Blueprint
+from flask import Blueprint, request
 
+from app.exceptions.file import InvalidFileError
 from app.responses import success_response
 from app.schemas.paper_schema import PaperResponseSchema
 from app.services import paper_service
@@ -33,4 +35,23 @@ def delete_paper(paper_id: UUID):
 
     return success_response(
         message="Paper deleted successfully.",
+    )
+
+@paper_bp.post("/projects/<uuid:project_id>/papers")
+def upload_paper(project_id: UUID):
+
+    file = request.files.get("file")
+
+    if file is None:
+        raise InvalidFileError("No file provided.")
+
+    paper = paper_service.upload_paper(
+        project_id,
+        file,
+    )
+
+    return success_response(
+        data=single_paper_schema.dump(paper),
+        message="Paper uploaded successfully.",
+        status=HTTPStatus.CREATED,
     )
