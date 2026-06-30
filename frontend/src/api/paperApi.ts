@@ -7,6 +7,12 @@ export async function getPapers(projectId: string): Promise<Paper[]> {
   return response.data.data as Paper[];
 }
 
+export async function getPaper(paperId: string): Promise<Paper> {
+  const response = await api.get(`/papers/${paperId}`);
+
+  return response.data.data as Paper;
+}
+
 export async function uploadPaper(
   projectId: string,
   file: File,
@@ -22,4 +28,12 @@ export async function uploadPaper(
 
 export async function deletePaper(paperId: string): Promise<void> {
   await api.delete(`/papers/${paperId}`);
+}
+
+export function openPaper(paperId: string): void {
+  window.open(
+    `${api.defaults.baseURL}/papers/${paperId}/download`,
+    "_blank",
+    "noopener,noreferrer",
+  );
 }
