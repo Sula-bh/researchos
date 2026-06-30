@@ -37,7 +37,7 @@ def get_project(project_id: UUID) -> Project:
 def update_project(
     project_id: UUID, title: str | None = None, description: str | None = None
 ) -> Project:
-    project = db.session.get(Project, project_id)
+    project = get_project(project_id)
 
     if project is None:
         raise ProjectNotFoundError()
@@ -54,7 +54,7 @@ def update_project(
 
 
 def delete_project(project_id: UUID) -> None:
-    project = db.session.get(Project, project_id)
+    project = get_project(project_id)
 
     if project is None:
         raise ProjectNotFoundError()
