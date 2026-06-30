@@ -48,6 +48,7 @@ export default function MarkdownEditor({
           markdownShortcutPlugin(),
 
           toolbarPlugin({
+            toolbarClassName: "border-b bg-muted/40",
             toolbarContents: () => (
               <>
                 <UndoRedo />
