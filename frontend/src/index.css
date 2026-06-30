@@ -32,7 +32,10 @@
   }
 
   ::selection {
-    background-color: var(--primary);
-    color: var(--primary-foreground);
+    background-color: hsl(220 90% 70% / 0.35);
+  }
+
+  ::-moz-selection {
+    background-color: hsl(220 90% 70% / 0.35);
   }
 }
