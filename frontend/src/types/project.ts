@@ -3,4 +3,6 @@ export interface Project {
   title: string;
   description: string | null;
   memory_dataset_id: string | null;
+  created_at: string;
+  updated_at: string;
 }

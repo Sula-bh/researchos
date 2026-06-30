@@ -22,6 +22,10 @@ class ProjectResponseSchema(Schema):
 
     memory_dataset_id = fields.String(allow_none=True)
 
+    created_at = fields.DateTime()
+
+    updated_at = fields.DateTime()
+
 
 class ProjectUpdateSchema(Schema):
     title = fields.String(
