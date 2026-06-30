@@ -27,11 +27,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
+import type { Project } from "@/types/project";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
 type CreateProjectDialogProps = {
-  onCreated: () => Promise<void>;
+  onCreated: (project: Project) => void;
 };
 
 export default function CreateProjectDialog({
@@ -50,7 +51,7 @@ export default function CreateProjectDialog({
 
   async function onSubmit(values: ProjectFormValues) {
     try {
-      await createProject(values);
+      const project = await createProject(values);
 
       toast.success("Project created successfully.");
 
@@ -58,7 +59,7 @@ export default function CreateProjectDialog({
 
       setOpen(false);
 
-      await onCreated();
+      onCreated(project);
     } catch (error) {
       toast.error(getErrorMessage(error));
     }

@@ -8,9 +8,16 @@ import type { Project } from "@/types/project";
 import CreateProjectDialog from "./components/CreateProjectDialog";
 import ProjectCard from "./components/ProjectCard";
 
+import EditProjectDialog from "./components/EditProjectDialog";
+import DeleteProjectDialog from "./components/DeleteProjectDialog";
+
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [search, setSearch] = useState("");
+
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
+
+  const [deletingProject, setDeletingProject] = useState<Project | null>(null);
 
   async function loadProjects() {
     try {
@@ -44,7 +51,11 @@ export default function ProjectsPage() {
           </p>
         </div>
 
-        <CreateProjectDialog onCreated={loadProjects} />
+        <CreateProjectDialog
+          onCreated={(project) =>
+            setProjects((previous) => [project, ...previous])
+          }
+        />
       </div>
 
       {/* Search */}
@@ -78,7 +89,11 @@ export default function ProjectsPage() {
               </p>
 
               <div className="mt-8">
-                <CreateProjectDialog onCreated={loadProjects} />
+                <CreateProjectDialog
+                  onCreated={(project) =>
+                    setProjects((previous) => [project, ...previous])
+                  }
+                />
               </div>
             </div>
           ) : (
@@ -97,11 +112,37 @@ export default function ProjectsPage() {
         ) : (
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {filteredProjects.map((project) => (
-              <ProjectCard key={project.id} project={project} />
+              <ProjectCard
+                key={project.id}
+                project={project}
+                onEdit={setEditingProject}
+                onDelete={setDeletingProject}
+              />
             ))}
           </div>
         )}
       </div>
+      <EditProjectDialog
+        project={editingProject}
+        onClose={() => setEditingProject(null)}
+        onUpdated={(updatedProject) => {
+          setProjects((previous) =>
+            previous.map((project) =>
+              project.id === updatedProject.id ? updatedProject : project,
+            ),
+          );
+        }}
+      />
+
+      <DeleteProjectDialog
+        project={deletingProject}
+        onClose={() => setDeletingProject(null)}
+        onDeleted={(projectId) => {
+          setProjects((previous) =>
+            previous.filter((project) => project.id !== projectId),
+          );
+        }}
+      />
     </main>
   );
 }

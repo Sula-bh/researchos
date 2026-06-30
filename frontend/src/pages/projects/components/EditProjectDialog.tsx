@@ -35,7 +35,7 @@ type EditProjectDialogProps = {
 
   onClose: () => void;
 
-  onUpdated: () => Promise<void>;
+  onUpdated: (project: Project) => void;
 };
 
 export default function EditProjectDialog({
@@ -65,13 +65,13 @@ export default function EditProjectDialog({
     if (!project) return;
 
     try {
-      await updateProject(project.id, values);
+      const updatedProject = await updateProject(project.id, values);
 
       toast.success("Project updated successfully.");
 
-      onClose();
+      onUpdated(updatedProject);
 
-      await onUpdated();
+      onClose();
     } catch (error) {
       toast.error(getErrorMessage(error));
     }

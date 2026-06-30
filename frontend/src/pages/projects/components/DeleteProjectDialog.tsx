@@ -22,7 +22,7 @@ type DeleteProjectDialogProps = {
 
   onClose: () => void;
 
-  onDeleted: () => Promise<void>;
+  onDeleted: (projectId: string) => void;
 };
 
 export default function DeleteProjectDialog({
@@ -38,9 +38,9 @@ export default function DeleteProjectDialog({
 
       toast.success("Project deleted successfully.");
 
-      onClose();
+      onDeleted(project.id);
 
-      await onDeleted();
+      onClose();
     } catch (error) {
       toast.error(getErrorMessage(error));
     }
