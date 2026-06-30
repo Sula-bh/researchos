@@ -1,5 +1,7 @@
 import { ExternalLink, FileText, MoreVertical, Trash2 } from "lucide-react";
+import { useNavigate, useParams } from "react-router-dom";
 
+import { openPaper } from "@/api/paperApi";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -17,8 +19,18 @@ type PaperCardProps = {
 };
 
 export default function PaperCard({ paper, onDelete }: PaperCardProps) {
+  const navigate = useNavigate();
+  const { projectId } = useParams();
+
+  function handleOpenDetails() {
+    navigate(`/projects/${projectId}/papers/${paper.id}`);
+  }
+
   return (
-    <Card className="transition-all hover:shadow-md">
+    <Card
+      className="cursor-pointer transition-all hover:shadow-md"
+      onClick={handleOpenDetails}
+    >
       <CardContent className="flex items-start justify-between p-5">
         <div className="flex gap-4">
           <div className="rounded-lg bg-primary/10 p-3">
@@ -44,14 +56,14 @@ export default function PaperCard({ paper, onDelete }: PaperCardProps) {
         </div>
 
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
             <Button variant="ghost" size="icon">
               <MoreVertical className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
 
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>
+          <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
+            <DropdownMenuItem onClick={() => openPaper(paper.id)}>
               <ExternalLink className="mr-2 h-4 w-4" />
               Open PDF
             </DropdownMenuItem>
