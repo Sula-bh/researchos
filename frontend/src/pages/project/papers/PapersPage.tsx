@@ -1,3 +1,6 @@
+import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/error";
+
 import { useEffect, useState } from "react";
 import { FileText, Search } from "lucide-react";
 import { useParams } from "react-router-dom";
@@ -34,22 +37,16 @@ export default function PapersPage() {
     if (!projectId) return;
 
     try {
-      console.log("1. Starting upload");
       setUploading(true);
 
       const paper = await uploadPaper(projectId, file);
-      console.log("2. Backend response");
-      console.log(paper);
 
-      setPapers((previous) => {
-        console.log("3. Updating state");
-        return [paper, ...previous];
-      });
-      console.log("4. Upload complete");
+      setPapers((previous) => [paper, ...previous]);
+      toast.success("Paper uploaded successfully.");
     } catch (error) {
       console.error(error);
+      toast.error(getErrorMessage(error));
     } finally {
-      console.log("5. Finally");
       setUploading(false);
     }
   }
