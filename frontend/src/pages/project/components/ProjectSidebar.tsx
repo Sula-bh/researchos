@@ -1,21 +1,40 @@
-export default function ProjectSidebar() {
+import { NavLink } from "react-router-dom";
+import type { Project } from "@/types/project";
+
+type ProjectSidebarProps = {
+  project?: Project;
+};
+
+export default function ProjectSidebar({ project }: ProjectSidebarProps) {
   return (
-    <aside className="w-64 border-r p-6">
-      <h2 className="mb-8 text-xl font-bold">ResearchOS</h2>
+    <aside className="flex h-screen w-64 flex-col border-r">
+      <div className="border-b p-6">
+        <h1 className="text-xl font-bold">ResearchOS</h1>
+      </div>
 
-      <nav className="space-y-4">
-        <p>Papers</p>
+      <div className="border-b p-4">
+        <button className="w-full text-left">▼ {project?.title}</button>
+      </div>
 
-        <p>Chat</p>
+      <nav className="flex-1 p-4 space-y-2">
+        <NavLink to="">Overview</NavLink>
 
-        <p>Knowledge Graph</p>
+        <NavLink to="papers">Papers</NavLink>
 
-        <p>Notes</p>
+        <NavLink to="experiments">Experiments</NavLink>
 
-        <p>Experiments</p>
+        <NavLink to="notes">Notes</NavLink>
 
-        <p>Timeline</p>
+        <NavLink to="timeline">Timeline</NavLink>
+
+        <NavLink to="graph">Knowledge Graph</NavLink>
+
+        <NavLink to="chat">Chat</NavLink>
       </nav>
+
+      <div className="border-t p-4">
+        <button>Project Settings</button>
+      </div>
     </aside>
   );
 }

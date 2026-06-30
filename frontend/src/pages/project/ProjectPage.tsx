@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 
 import { getProject } from "@/api/projectApi";
 import ProjectSidebar from "./components/ProjectSidebar";
 import type { Project } from "@/types/project";
+import ProjectHeader from "./components/ProjectHeader";
 
 export default function ProjectPage() {
   const { projectId } = useParams();
@@ -28,10 +29,14 @@ export default function ProjectPage() {
 
   return (
     <main className="flex h-screen">
-      <ProjectSidebar />
+      <ProjectSidebar project={project} />
 
-      <section className="flex-1 p-8">
-        <h1>{project?.title}</h1>
+      <section className="flex flex-1 flex-col">
+        <ProjectHeader project={project} />
+
+        <main className="flex-1 p-8">
+          <Outlet />
+        </main>
       </section>
     </main>
   );
