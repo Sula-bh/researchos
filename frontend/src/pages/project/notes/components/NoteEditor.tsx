@@ -8,6 +8,8 @@ type NoteEditorProps = {
 
   loading?: boolean;
 
+  dirty?: boolean;
+
   updatedAt?: string;
 
   onTitleChange: (title: string) => void;
@@ -20,6 +22,7 @@ export default function NoteEditor({
   title,
   content,
   loading = false,
+  dirty,
   updatedAt,
   onTitleChange,
   onContentChange,
@@ -38,7 +41,7 @@ export default function NoteEditor({
         />
 
         <Button onClick={onSave} disabled={loading}>
-          {loading ? "Saving..." : "Save"}
+          {loading ? "Saving..." : dirty ? "Save" : "Saved"}
         </Button>
       </div>
 
