@@ -35,7 +35,8 @@ export default function NoteEditorPage() {
 
   const isDirty = title !== savedTitle || content !== savedContent;
 
-  const { open, cancel, discard } = useUnsavedChanges(isDirty);
+  const { open, cancel, discard, allowNextNavigation } =
+    useUnsavedChanges(isDirty);
 
   useEffect(() => {
     if (!noteId) return;
@@ -123,6 +124,8 @@ export default function NoteEditorPage() {
 
       toast.success("Note created.");
 
+      allowNextNavigation();
+
       navigate(`/projects/${projectId}/notes/${created.id}`, {
         replace: true,
       });
@@ -174,6 +177,7 @@ export default function NoteEditorPage() {
           const success = await handleSave();
 
           if (success) {
+            allowNextNavigation();
             discard();
           }
         }}
