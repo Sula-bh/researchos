@@ -49,7 +49,11 @@ export default function NoteEditor({
 
       {updatedAt && (
         <p className="text-sm text-muted-foreground">
-          Last updated {new Date(updatedAt).toLocaleString()}
+          Last updated{" "}
+          {new Intl.DateTimeFormat(undefined, {
+            dateStyle: "medium",
+            timeStyle: "short",
+          }).format(new Date(updatedAt))}
         </p>
       )}
 
