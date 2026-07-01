@@ -1,38 +1,40 @@
-import { ArrowLeft } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-
+import { ArrowLeft } from "lucide-react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
+
+import { createNote, getNote, updateNote } from "@/api/noteApi";
+
+import type { Note } from "@/types/note";
+
 import { getErrorMessage } from "@/lib/error";
-import { useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+
+import UnsavedChangesDialog from "@/components/UnsavedChangesDialog";
+import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
 
 import NoteEditor from "./components/NoteEditor";
 
-import { createNote, getNote, updateNote } from "@/api/noteApi";
-import type { Note } from "@/types/note";
-
 export default function NoteEditorPage() {
   const { projectId, noteId } = useParams();
-
   const navigate = useNavigate();
 
   const [note, setNote] = useState<Note | null>(null);
 
   const [loading, setLoading] = useState(false);
-
   const [saving, setSaving] = useState(false);
 
   const [title, setTitle] = useState("");
-
   const [content, setContent] = useState("");
 
   const [savedTitle, setSavedTitle] = useState("");
-
   const [savedContent, setSavedContent] = useState("");
 
   const isDirty = title !== savedTitle || content !== savedContent;
+
+  const { open, cancel, discard } = useUnsavedChanges(isDirty);
 
   useEffect(() => {
     if (!noteId) return;
@@ -53,7 +55,7 @@ export default function NoteEditorPage() {
         setSavedTitle(data.title);
         setSavedContent(data.content);
       } catch (error) {
-        console.error(error);
+        toast.error(getErrorMessage(error));
       } finally {
         setLoading(false);
       }
@@ -68,16 +70,14 @@ export default function NoteEditorPage() {
         e.preventDefault();
 
         if (isDirty && !saving) {
-          handleSave();
+          void handleSave();
         }
       }
     }
 
     window.addEventListener("keydown", handleKeyDown);
 
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isDirty, saving, title, content]);
 
   useEffect(() => {
@@ -93,13 +93,14 @@ export default function NoteEditorPage() {
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [isDirty]);
 
-  async function handleSave() {
-    if (!projectId) return;
+  async function handleSave(): Promise<boolean> {
+    if (saving) return false;
+
+    if (!projectId) return false;
 
     if (!title.trim()) {
       toast.error("Please enter a title.");
-
-      return;
+      return false;
     }
 
     try {
@@ -120,26 +121,38 @@ export default function NoteEditorPage() {
         setSavedContent(updated.content);
 
         toast.success("Note updated.");
-      } else {
-        const created = await createNote(projectId, {
-          title,
-          content,
-        });
 
-        toast.success("Note created.");
-
-        navigate(`/projects/${projectId}/notes/${created.id}`, {
-          replace: true,
-        });
-
-        setSavedTitle(created.title);
-        setSavedContent(created.content);
+        return true;
       }
+
+      const created = await createNote(projectId, {
+        title,
+        content,
+      });
+
+      toast.success("Note created.");
+
+      navigate(`/projects/${projectId}/notes/${created.id}`, {
+        replace: true,
+      });
+
+      return true;
     } catch (error) {
       toast.error(getErrorMessage(error));
+      return false;
     } finally {
       setSaving(false);
     }
+  }
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <Skeleton className="h-8 w-40" />
+        <Skeleton className="h-12 w-80" />
+        <Skeleton className="h-150 w-full rounded-xl" />
+      </div>
+    );
   }
 
   return (
@@ -160,6 +173,19 @@ export default function NoteEditorPage() {
         onTitleChange={setTitle}
         onContentChange={setContent}
         onSave={handleSave}
+      />
+
+      <UnsavedChangesDialog
+        open={open}
+        onCancel={cancel}
+        onDiscard={discard}
+        onSave={async () => {
+          const success = await handleSave();
+
+          if (success) {
+            discard();
+          }
+        }}
       />
     </div>
   );
