@@ -9,7 +9,7 @@ import MarkdownEditor from "@/components/MarkdownEditor";
 type ExperimentSectionProps = {
   value: string;
 
-  title: string;
+  title: React.ReactNode;
 
   content: string;
 

@@ -1,5 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Target, FlaskConical, BarChart3, CheckCircle2 } from "lucide-react";
 
 import { Accordion } from "@/components/ui/accordion";
 
@@ -125,28 +126,48 @@ export default function ExperimentEditor({
       >
         <ExperimentSection
           value="objective"
-          title="Objective"
+          title={
+            <div className="flex items-center gap-2">
+              <Target className="h-4 w-4" />
+              Objective
+            </div>
+          }
           content={objective}
           onChange={onObjectiveChange}
         />
 
         <ExperimentSection
           value="methodology"
-          title="Methodology"
+          title={
+            <div className="flex items-center gap-2">
+              <FlaskConical className="h-4 w-4" />
+              Methodology
+            </div>
+          }
           content={methodology}
           onChange={onMethodologyChange}
         />
 
         <ExperimentSection
           value="results"
-          title="Results"
+          title={
+            <div className="flex items-center gap-2">
+              <BarChart3 className="h-4 w-4" />
+              Results
+            </div>
+          }
           content={results}
           onChange={onResultsChange}
         />
 
         <ExperimentSection
           value="conclusion"
-          title="Conclusion"
+          title={
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4" />
+              Conclusion
+            </div>
+          }
           content={conclusion}
           onChange={onConclusionChange}
         />
