@@ -4,19 +4,30 @@ from pathlib import Path
 
 import fitz
 
-from app.ai.types.document import PDFDocument
+from app.ai.types.document import PDFDocument, PDFPage
 
 
-def extract_metadata(path: str | Path) -> PDFDocument:
-    doc = fitz.open(path)
+def parse_pdf(path: str | Path) -> PDFDocument:
+    document = fitz.open(path)
 
-    metadata = doc.metadata
+    metadata = document.metadata
+
+    pages = [
+        PDFPage(
+            number=page.number + 1,
+            text=page.get_text().strip(),
+        )
+        for page in document
+    ]
 
     return PDFDocument(
         title=metadata.get("title") or "",
         authors=metadata.get("author") or "",
         abstract="",
+        pages=pages,
         metadata={
-            "page_count": len(doc),
+            "page_count": len(document),
+            "producer": metadata.get("producer"),
+            "creator": metadata.get("creator"),
         },
     )

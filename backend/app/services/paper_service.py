@@ -8,7 +8,7 @@ from app.exceptions.file import InvalidFileError
 from app.exceptions.paper import PaperNotFoundError
 from app.extensions import db
 from app.models.paper import Paper
-from app.services.pdf_service import extract_metadata
+from app.services.pdf_service import parse_pdf
 from app.services.storage_service import (
     delete_file,
     file_exists,
@@ -42,7 +42,7 @@ def upload_paper(project_id: UUID, file: FileStorage) -> Paper:
         file,
     )
 
-    document = extract_metadata(storage_key)
+    document = parse_pdf(storage_key)
 
     paper = Paper(
         project_id=project_id,
