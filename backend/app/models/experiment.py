@@ -3,10 +3,11 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 from uuid import UUID
 
-from sqlalchemy import ForeignKey, String, Text
+from sqlalchemy import Enum, ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.extensions import db
+from app.models.enums import ExperimentStatus
 from app.models.mixins import TimestampMixin, UUIDMixin
 
 if TYPE_CHECKING:
@@ -50,12 +51,11 @@ class Experiment(UUIDMixin, TimestampMixin, db.Model):
         nullable=False,
     )
 
-    status: Mapped[str] = mapped_column(
-        String(30),
-        default="Draft",
+    status: Mapped[ExperimentStatus] = mapped_column(
+        Enum(ExperimentStatus),
+        default=ExperimentStatus.DRAFT,
         nullable=False,
     )
-
     project: Mapped["Project"] = relationship(
         back_populates="experiments",
     )

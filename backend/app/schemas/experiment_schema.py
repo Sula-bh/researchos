@@ -1,3 +1,4 @@
+from app.models.enums import ExperimentStatus
 from marshmallow import Schema, fields, validate
 
 
@@ -22,7 +23,12 @@ class ExperimentUpdateSchema(Schema):
 
     conclusion = fields.String(required=False)
 
-    status = fields.String(required=False)
+    status = fields.String(
+        required=False,
+        validate=validate.OneOf(
+            [status.value for status in ExperimentStatus]
+        )
+    )
 
 
 class ExperimentResponseSchema(Schema):
