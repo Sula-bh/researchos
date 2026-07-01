@@ -14,7 +14,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 
-import { Badge } from "@/components/ui/badge";
+import StatusBadge from "./StatusBadge";
 
 import { formatDateTime } from "@/lib/date";
 
@@ -43,7 +43,7 @@ export default function ExperimentCard({
         <div className="space-y-2">
           <CardTitle>{experiment.title}</CardTitle>
 
-          <Badge variant="secondary">{experiment.status}</Badge>
+          <StatusBadge status={experiment.status} />
         </div>
 
         <DropdownMenu>
