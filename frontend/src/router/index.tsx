@@ -9,6 +9,7 @@ import NotesPage from "@/pages/project/notes/NotesPage";
 import NoteEditorPage from "@/pages/project/notes/NoteEditorPage";
 import TimelinePage from "@/pages/project/TimelinePage";
 import ExperimentsPage from "@/pages/project/ExperimentsPage";
+import ExperimentEditorPage from "@/pages/project/experiments/ExperimentEditorPage";
 import KnowledgeGraphPage from "@/pages/project/KnowledgeGraphPage";
 import PaperDetailsPage from "@/pages/project/paper/PaperDetailsPage";
 
@@ -61,6 +62,14 @@ export const router = createBrowserRouter([
       {
         path: "experiments",
         element: <ExperimentsPage />,
+      },
+      {
+        path: "experiments/new",
+        element: <ExperimentEditorPage />,
+      },
+      {
+        path: "experiments/:experimentId",
+        element: <ExperimentEditorPage />,
       },
       {
         path: "graph",
