@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import MarkdownEditor from "./MarkdownEditor";
+import { formatDateTime } from "@/lib/date";
 
 type NoteEditorProps = {
   title: string;
@@ -49,11 +50,7 @@ export default function NoteEditor({
 
       {updatedAt && (
         <p className="text-sm text-muted-foreground">
-          Last updated{" "}
-          {new Intl.DateTimeFormat(undefined, {
-            dateStyle: "medium",
-            timeStyle: "short",
-          }).format(new Date(updatedAt))}
+          Last updated {formatDateTime(updatedAt)}
         </p>
       )}
 
