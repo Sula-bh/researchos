@@ -14,6 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import UnsavedChangesDialog from "@/components/UnsavedChangesDialog";
 import { useUnsavedChanges } from "@/hooks/useUnsavedChanges";
+import { useHotkey } from "@/hooks/useHotkey";
 
 import NoteEditor from "./components/NoteEditor";
 
@@ -64,21 +65,11 @@ export default function NoteEditorPage() {
     loadNote();
   }, [noteId]);
 
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if ((e.ctrlKey || e.metaKey) && e.key === "s") {
-        e.preventDefault();
-
-        if (isDirty && !saving) {
-          void handleSave();
-        }
-      }
+  useHotkey("mod+s", () => {
+    if (isDirty && !saving) {
+      void handleSave();
     }
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isDirty, saving, title, content]);
+  });
 
   useEffect(() => {
     function handleBeforeUnload(e: BeforeUnloadEvent) {
