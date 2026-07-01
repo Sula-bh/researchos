@@ -1,5 +1,8 @@
+import { useEffect, useRef } from "react";
+
 import {
   MDXEditor,
+  type MDXEditorMethods,
   headingsPlugin,
   listsPlugin,
   quotePlugin,
@@ -24,9 +27,22 @@ export default function MarkdownEditor({
   onChange,
   placeholder = "Start writing...",
 }: MarkdownEditorProps) {
+  const editorRef = useRef<MDXEditorMethods>(null);
+
+  useEffect(() => {
+    const editor = editorRef.current;
+
+    if (!editor) return;
+
+    if (editor.getMarkdown() !== value) {
+      editor.setMarkdown(value);
+    }
+  }, [value]);
+
   return (
     <div className="overflow-hidden rounded-xl border bg-background">
       <MDXEditor
+        ref={editorRef}
         markdown={value}
         onChange={onChange}
         placeholder={placeholder}
@@ -46,7 +62,6 @@ export default function MarkdownEditor({
           quotePlugin(),
           thematicBreakPlugin(),
           markdownShortcutPlugin(),
-
           toolbarPlugin({
             toolbarClassName: "border-b bg-muted/40",
             toolbarContents: () => (

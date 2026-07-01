@@ -1,5 +1,5 @@
 import { FileText, MoreVertical, Trash2 } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import type { Note } from "@/types/note";
 
@@ -18,16 +18,15 @@ type NoteCardProps = {
 };
 
 export default function NoteCard({ note, onDelete }: NoteCardProps) {
+  const navigate = useNavigate();
   const { projectId } = useParams();
 
   return (
-    <Card className="group relative cursor-pointer overflow-hidden transition-all hover:border-primary/20 hover:shadow-md">
+    <Card
+      className="cursor-pointer transition-all hover:border-primary/20 hover:shadow-md"
+      onClick={() => navigate(`/projects/${projectId}/notes/${note.id}`)}
+    >
       {/* Clickable Area */}
-      <Link
-        to={`/projects/${projectId}/notes/${note.id}`}
-        className="absolute inset-0 z-0"
-      />
-
       <CardContent className="relative z-10 flex items-start justify-between p-5">
         <div className="flex min-w-0 flex-1 gap-4">
           <div className="rounded-lg bg-primary/10 p-3">
@@ -54,13 +53,13 @@ export default function NoteCard({ note, onDelete }: NoteCardProps) {
 
         {/* Menu */}
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
             <Button variant="ghost" size="icon" className="relative z-20">
               <MoreVertical className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
 
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
             <DropdownMenuItem
               onClick={() => onDelete(note)}
               className="text-destructive"
