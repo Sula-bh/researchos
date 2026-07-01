@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import MarkdownEditor from "./MarkdownEditor";
+import MarkdownEditor from "@/components/MarkdownEditor";
 import { formatDateTime } from "@/lib/date";
 
 type NoteEditorProps = {
