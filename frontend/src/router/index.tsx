@@ -8,7 +8,7 @@ import PapersPage from "@/pages/project/papers/PapersPage";
 import NotesPage from "@/pages/project/notes/NotesPage";
 import NoteEditorPage from "@/pages/project/notes/NoteEditorPage";
 import TimelinePage from "@/pages/project/TimelinePage";
-import ExperimentsPage from "@/pages/project/ExperimentsPage";
+import ExperimentsPage from "@/pages/project/experiments/ExperimentsPage";
 import ExperimentEditorPage from "@/pages/project/experiments/ExperimentEditorPage";
 import KnowledgeGraphPage from "@/pages/project/KnowledgeGraphPage";
 import PaperDetailsPage from "@/pages/project/paper/PaperDetailsPage";
