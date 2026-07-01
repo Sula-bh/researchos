@@ -42,13 +42,13 @@ def upload_paper(project_id: UUID, file: FileStorage) -> Paper:
         file,
     )
 
-    metadata = extract_metadata(storage_key)
+    document = extract_metadata(storage_key)
 
     paper = Paper(
         project_id=project_id,
-        title=metadata["title"] or file_name,
-        authors=metadata["authors"] or None,
-        abstract=None,
+        title=document.title or file_name,
+        authors=document.authors or None,
+        abstract=document.abstract or None,
         file_name=file_name,
         storage_key=storage_key,
     )
