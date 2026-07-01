@@ -1,15 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
 import { FlaskConical, Search } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { toast } from "sonner";
 
-import { getExperiments } from "@/api/experimentApi";
+import { deleteExperiment, getExperiments } from "@/api/experimentApi";
 
 import type { Experiment } from "@/types/experiment";
+
+import { getErrorMessage } from "@/lib/error";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 import ExperimentCard from "./components/ExperimentCard";
+import DeleteExperimentDialog from "./components/DeleteExperimentDialog";
 
 export default function ExperimentsPage() {
   const { projectId } = useParams();
@@ -18,26 +22,56 @@ export default function ExperimentsPage() {
 
   const [search, setSearch] = useState("");
 
+  const [deletingExperiment, setDeletingExperiment] =
+    useState<Experiment | null>(null);
+
   async function loadExperiments() {
     if (!projectId) return;
 
-    const data = await getExperiments(projectId);
+    try {
+      const data = await getExperiments(projectId);
 
-    setExperiments(data);
+      setExperiments(data);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    }
   }
 
   useEffect(() => {
     void loadExperiments();
   }, [projectId]);
 
+  async function handleDelete() {
+    if (!deletingExperiment) return;
+
+    try {
+      await deleteExperiment(deletingExperiment.id);
+
+      setExperiments((current) =>
+        current.filter((experiment) => experiment.id !== deletingExperiment.id),
+      );
+
+      toast.success("Experiment deleted.");
+
+      setDeletingExperiment(null);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    }
+  }
+
   const filteredExperiments = useMemo(() => {
-    return experiments.filter((experiment) =>
-      experiment.title.toLowerCase().includes(search.toLowerCase()),
-    );
+    const query = search.toLowerCase();
+
+    return experiments.filter((experiment) => {
+      return (
+        experiment.title.toLowerCase().includes(query) ||
+        experiment.objective.toLowerCase().includes(query)
+      );
+    });
   }, [experiments, search]);
 
   return (
-    <main className="mx-auto max-w-7xl p-8">
+    <main className="space-y-6">
       {/* Header */}
 
       <div className="flex items-start justify-between">
@@ -49,12 +83,16 @@ export default function ExperimentsPage() {
           </p>
         </div>
 
-        <Button>Create Experiment</Button>
+        <Button asChild>
+          <Link to={`/projects/${projectId}/experiments/new`}>
+            Create Experiment
+          </Link>
+        </Button>
       </div>
 
       {/* Search */}
 
-      <div className="relative mt-8">
+      <div className="relative">
         <Search className="absolute top-3 left-3 h-4 w-4 text-muted-foreground" />
 
         <Input
@@ -67,8 +105,8 @@ export default function ExperimentsPage() {
 
       {/* Content */}
 
-      <div className="mt-8">
-        {filteredExperiments.length === 0 ? (
+      {filteredExperiments.length === 0 ? (
+        experiments.length === 0 ? (
           <div className="flex flex-col items-center rounded-xl border border-dashed py-20">
             <div className="rounded-full bg-primary/10 p-4">
               <FlaskConical className="h-10 w-10 text-primary" />
@@ -76,22 +114,47 @@ export default function ExperimentsPage() {
 
             <h2 className="mt-6 text-xl font-semibold">No experiments yet</h2>
 
-            <p className="mt-2 text-center text-muted-foreground">
-              Start tracking your research ideas, hypotheses and results.
+            <p className="mt-2 max-w-md text-center text-muted-foreground">
+              Start tracking your research ideas, hypotheses, methodologies and
+              results.
             </p>
+
+            <Button asChild className="mt-8">
+              <Link to={`/projects/${projectId}/experiments/new`}>
+                Create Experiment
+              </Link>
+            </Button>
           </div>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {filteredExperiments.map((experiment) => (
-              <ExperimentCard
-                key={experiment.id}
-                experiment={experiment}
-                onDelete={(experiment) => console.log(experiment)}
-              />
-            ))}
+          <div className="flex flex-col items-center rounded-xl border border-dashed py-20">
+            <Search className="h-10 w-10 text-muted-foreground" />
+
+            <h2 className="mt-6 text-xl font-semibold">
+              No matching experiments
+            </h2>
+
+            <p className="mt-2 text-muted-foreground">
+              Try another search term.
+            </p>
           </div>
-        )}
-      </div>
+        )
+      ) : (
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          {filteredExperiments.map((experiment) => (
+            <ExperimentCard
+              key={experiment.id}
+              experiment={experiment}
+              onDelete={setDeletingExperiment}
+            />
+          ))}
+        </div>
+      )}
+
+      <DeleteExperimentDialog
+        experiment={deletingExperiment}
+        onClose={() => setDeletingExperiment(null)}
+        onDelete={handleDelete}
+      />
     </main>
   );
 }
