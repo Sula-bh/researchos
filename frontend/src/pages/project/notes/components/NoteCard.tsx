@@ -12,6 +12,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+import { formatDateTime } from "@/lib/date";
+
 type NoteCardProps = {
   note: Note;
   onDelete: (note: Note) => void;
@@ -41,12 +43,7 @@ export default function NoteCard({ note, onDelete }: NoteCardProps) {
             </p>
 
             <p className="text-xs text-muted-foreground">
-              Updated{" "}
-              {new Date(note.updated_at).toLocaleDateString(undefined, {
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-              })}
+              Updated {formatDateTime(note.updated_at)}
             </p>
           </div>
         </div>
