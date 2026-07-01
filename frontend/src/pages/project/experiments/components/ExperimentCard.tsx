@@ -75,7 +75,7 @@ export default function ExperimentCard({
             Experiment
           </div>
 
-          <span>{formatDateTime(experiment.updated_at)}</span>
+          <span>Updated {formatDateTime(experiment.updated_at)}</span>
         </div>
       </CardContent>
     </Card>

@@ -118,12 +118,7 @@ export default function ExperimentEditor({
 
       {/* Sections */}
 
-      <Accordion
-        type="single"
-        collapsible
-        defaultValue="objective"
-        className="w-full"
-      >
+      <Accordion type="multiple" className="space-y-5">
         <ExperimentSection
           value="objective"
           title={
