@@ -8,6 +8,21 @@ class ExperimentCreateSchema(Schema):
         validate=validate.Length(min=1, max=255),
     )
 
+    objective = fields.String(load_default="")
+
+    methodology = fields.String(load_default="")
+
+    results = fields.String(load_default="")
+
+    conclusion = fields.String(load_default="")
+
+    status = fields.String(
+        load_default=ExperimentStatus.DRAFT.value,
+        validate=validate.OneOf(
+            [status.value for status in ExperimentStatus]
+        ),
+    )
+
 
 class ExperimentUpdateSchema(Schema):
     title = fields.String(

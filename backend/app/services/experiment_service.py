@@ -5,6 +5,7 @@ from sqlalchemy import select
 from app.exceptions.experiment import ExperimentNotFoundError
 from app.exceptions.project import ProjectNotFoundError
 from app.extensions import db
+from app.models.enums import ExperimentStatus
 from app.models.experiment import Experiment
 from app.models.project import Project
 
@@ -12,6 +13,11 @@ from app.models.project import Project
 def create_experiment(
     project_id: UUID,
     title: str,
+    objective: str = "",
+    methodology: str = "",
+    results: str = "",
+    conclusion: str = "",
+    status: ExperimentStatus = ExperimentStatus.DRAFT,
 ) -> Experiment:
     project = db.session.get(Project, project_id)
 
@@ -21,6 +27,11 @@ def create_experiment(
     experiment = Experiment(
         project_id=project_id,
         title=title,
+        objective=objective,
+        methodology=methodology,
+        results=results,
+        conclusion=conclusion,
+        status=status,
     )
 
     db.session.add(experiment)

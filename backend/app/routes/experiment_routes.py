@@ -29,6 +29,11 @@ def create_experiment(project_id: UUID):
     experiment = experiment_service.create_experiment(
         project_id=project_id,
         title=data["title"],
+        objective=data["objective"],
+        methodology=data["methodology"],
+        results=data["results"],
+        conclusion=data["conclusion"],
+        status=data["status"],
     )
 
     return success_response(
