@@ -17,6 +17,11 @@ export async function createExperiment(
   projectId: string,
   data: {
     title: string;
+    objective?: string;
+    methodology?: string;
+    results?: string;
+    conclusion?: string;
+    status?: ExperimentStatus;
   },
 ): Promise<Experiment> {
   const response = await api.post(`/projects/${projectId}/experiments`, data);
