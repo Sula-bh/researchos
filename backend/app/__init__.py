@@ -2,7 +2,7 @@ from flask import Flask
 
 from app.config import Config
 from app.error_handlers import register_error_handlers
-from app.extensions import cors, db, migrate
+from app.extensions import cors, db, migrate, rq
 from app.routes.experiment_routes import experiment_bp
 from app.routes.note_routes import note_bp
 from app.routes.paper_routes import paper_bp
@@ -13,6 +13,7 @@ def register_extensions(app: Flask):
     db.init_app(app)
     migrate.init_app(app, db)
     cors.init_app(app)
+    rq.init_app(app)
 
 
 def register_models():
