@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from flask import send_file
+from flask import current_app, send_file
 from sqlalchemy import select
 from werkzeug.datastructures import FileStorage
 
@@ -57,7 +57,7 @@ def upload_paper(project_id: UUID, file: FileStorage) -> Paper:
     db.session.add(paper)
     db.session.commit()
 
-    submit_ingest_paper(paper.id)
+    submit_ingest_paper(current_app._get_current_object(), paper.id)
 
     return paper
 

@@ -6,19 +6,20 @@ import threading
 from uuid import UUID
 
 from app.ai import knowledge_service
-from app.app_context import app
 from app.extensions import db
 from app.models.paper import Paper
+from flask import Flask
 
 logger = logging.getLogger(__name__)
 
 
 def submit_ingest_paper(
+    app: Flask,
     paper_id: UUID,
 ) -> None:
     thread = threading.Thread(
         target=_run_job,
-        args=(paper_id,),
+        args=(app, paper_id),
         daemon=True,
         name=f"paper-ingest-{paper_id}",
     )
@@ -27,6 +28,7 @@ def submit_ingest_paper(
 
 
 def _run_job(
+    app: Flask,
     paper_id: UUID,
 ) -> None:
     with app.app_context():
