@@ -11,7 +11,7 @@ from app.ai.providers.memory_provider import MemoryProvider
 class CogneeProvider(MemoryProvider):
     @staticmethod
     def _dataset_name(project_id: UUID) -> str:
-        return f"project_{project_id}"
+        return f"project:{project_id}"
 
     async def ingest_document(
         self,
