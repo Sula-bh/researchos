@@ -4,6 +4,7 @@ from flask import send_file
 from sqlalchemy import select
 from werkzeug.datastructures import FileStorage
 
+from app.ai.jobs.ingest_paper import submit_ingest_paper
 from app.exceptions.file import InvalidFileError
 from app.exceptions.paper import PaperNotFoundError
 from app.extensions import db
@@ -55,6 +56,8 @@ def upload_paper(project_id: UUID, file: FileStorage) -> Paper:
 
     db.session.add(paper)
     db.session.commit()
+
+    submit_ingest_paper(paper.id)
 
     return paper
 
