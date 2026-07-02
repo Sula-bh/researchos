@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import datetime
 from typing import TYPE_CHECKING
 from uuid import UUID
 
@@ -7,6 +8,7 @@ from sqlalchemy import ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.extensions import db
+from app.models.enums import AIStatus
 from app.models.mixins import TimestampMixin, UUIDMixin
 
 if TYPE_CHECKING:
@@ -48,4 +50,20 @@ class Paper(UUIDMixin, TimestampMixin, db.Model):
 
     project: Mapped[Project] = relationship(
         back_populates="papers",
+    )
+
+    ai_status: Mapped[AIStatus] = mapped_column(
+        db.Enum(AIStatus),
+        nullable=False,
+        default=AIStatus.PENDING,
+    )
+
+    processed_at: Mapped[datetime | None] = mapped_column(
+        db.DateTime(timezone=True),
+        nullable=True,
+    )
+
+    ai_error: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
     )

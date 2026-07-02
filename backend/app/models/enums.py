@@ -6,3 +6,10 @@ class ExperimentStatus(StrEnum):
     RUNNING = "Running"
     COMPLETED = "Completed"
     ARCHIVED = "Archived"
+
+
+class AIStatus(StrEnum):
+    PENDING = "Pending"
+    PROCESSING = "Processing"
+    COMPLETED = "Completed"
+    FAILED = "Failed"
