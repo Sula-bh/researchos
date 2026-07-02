@@ -52,7 +52,10 @@ class Experiment(UUIDMixin, TimestampMixin, db.Model):
     )
 
     status: Mapped[ExperimentStatus] = mapped_column(
-        Enum(ExperimentStatus),
+        Enum(
+            ExperimentStatus,
+            native_enum=False,
+        ),
         default=ExperimentStatus.DRAFT,
         nullable=False,
     )

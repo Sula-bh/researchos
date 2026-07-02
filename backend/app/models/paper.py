@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 from uuid import UUID
 
-from sqlalchemy import ForeignKey, String, Text
+from sqlalchemy import Enum, ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.extensions import db
@@ -53,7 +53,10 @@ class Paper(UUIDMixin, TimestampMixin, db.Model):
     )
 
     ai_status: Mapped[AIStatus] = mapped_column(
-        db.Enum(AIStatus),
+        Enum(
+            AIStatus,
+            native_enum=False,
+        ),
         nullable=False,
         default=AIStatus.PENDING,
     )
