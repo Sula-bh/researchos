@@ -15,7 +15,7 @@ import type { Paper } from "@/types/paper";
 
 type PaperCardProps = {
   paper: Paper;
-  onDelete: (id: string) => void;
+  onDelete: (paper: Paper) => void;
 };
 
 export default function PaperCard({ paper, onDelete }: PaperCardProps) {
@@ -69,7 +69,7 @@ export default function PaperCard({ paper, onDelete }: PaperCardProps) {
             </DropdownMenuItem>
 
             <DropdownMenuItem
-              onClick={() => onDelete(paper.id)}
+              onClick={() => onDelete(paper)}
               className="text-destructive"
             >
               <Trash2 className="mr-2 h-4 w-4" />

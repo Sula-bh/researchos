@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FileText, Search } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -10,6 +10,7 @@ import type { Paper } from "@/types/paper";
 
 import PaperCard from "./components/PaperCard";
 import UploadPaperButton from "./components/UploadPaperButton";
+import DeletePaperDialog from "./components/DeletePaperDialog";
 
 export default function PapersPage() {
   const { projectId } = useParams();
@@ -17,6 +18,8 @@ export default function PapersPage() {
   const [papers, setPapers] = useState<Paper[]>([]);
   const [uploading, setUploading] = useState(false);
   const [search, setSearch] = useState("");
+
+  const [deletingPaper, setDeletingPaper] = useState<Paper | null>(null);
 
   async function loadPapers(id: string) {
     try {
@@ -51,21 +54,29 @@ export default function PapersPage() {
     }
   }
 
-  async function handleDelete(id: string) {
-    try {
-      await deletePaper(id);
+  const filteredPapers = useMemo(() => {
+    const query = search.toLowerCase();
 
-      setPapers((previous) => previous.filter((paper) => paper.id !== id));
+    return papers.filter((paper) => paper.title.toLowerCase().includes(query));
+  }, [papers, search]);
+
+  async function handleDelete() {
+    if (!deletingPaper) return;
+
+    try {
+      await deletePaper(deletingPaper.id);
+
+      setPapers((previous) =>
+        previous.filter((paper) => paper.id !== deletingPaper.id),
+      );
 
       toast.success("Paper deleted.");
+
+      setDeletingPaper(null);
     } catch (error) {
       toast.error(getErrorMessage(error));
     }
   }
-
-  const filteredPapers = papers.filter((paper) =>
-    paper.title.toLowerCase().includes(search.toLowerCase()),
-  );
 
   return (
     <div className="space-y-6">
@@ -130,10 +141,20 @@ export default function PapersPage() {
       ) : (
         <div className="space-y-4">
           {filteredPapers.map((paper) => (
-            <PaperCard key={paper.id} paper={paper} onDelete={handleDelete} />
+            <PaperCard
+              key={paper.id}
+              paper={paper}
+              onDelete={setDeletingPaper}
+            />
           ))}
         </div>
       )}
+
+      <DeletePaperDialog
+        paper={deletingPaper}
+        onClose={() => setDeletingPaper(null)}
+        onDelete={handleDelete}
+      />
     </div>
   );
 }
