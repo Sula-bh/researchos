@@ -18,3 +18,8 @@ class Config:
     BASE_DIR = Path(__file__).resolve().parent.parent
 
     UPLOAD_DIR = BASE_DIR / "uploads"
+
+    REDIS_URL = os.getenv(
+        "REDIS_URL",
+        "redis://localhost:6379/0",
+    )
