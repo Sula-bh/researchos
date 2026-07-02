@@ -53,12 +53,9 @@ class Paper(UUIDMixin, TimestampMixin, db.Model):
     )
 
     ai_status: Mapped[AIStatus] = mapped_column(
-        Enum(
-            AIStatus,
-            native_enum=False,
-        ),
-        nullable=False,
+        Enum(AIStatus),
         default=AIStatus.PENDING,
+        nullable=False,
     )
 
     processed_at: Mapped[datetime | None] = mapped_column(
