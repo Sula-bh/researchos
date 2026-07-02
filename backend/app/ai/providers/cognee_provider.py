@@ -36,10 +36,11 @@ class CogneeProvider(MemoryProvider):
         project_id: UUID,
         query: str,
     ):
+        dataset_name = self._dataset_name(project_id)
         try:
             return await cognee.recall(
                 query_text=query,
-                dataset_name=self._dataset_name(project_id),
+                datasets=[dataset_name],
             )
         except Exception as error:
             raise AISearchError(
