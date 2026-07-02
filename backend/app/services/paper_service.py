@@ -1,14 +1,15 @@
 from uuid import UUID
 
-from flask import current_app, send_file
+from flask import send_file
 from sqlalchemy import select
 from werkzeug.datastructures import FileStorage
 
-from app.ai.jobs.ingest_paper import submit_ingest_paper
+from app.ai.tasks.ingest_paper import ingest_paper
 from app.exceptions.file import InvalidFileError
 from app.exceptions.paper import PaperNotFoundError
 from app.extensions import db
 from app.models.paper import Paper
+from app.queue import queue
 from app.services.pdf_service import parse_pdf
 from app.services.storage_service import (
     delete_file,
@@ -57,7 +58,10 @@ def upload_paper(project_id: UUID, file: FileStorage) -> Paper:
     db.session.add(paper)
     db.session.commit()
 
-    submit_ingest_paper(current_app._get_current_object(), paper.id)
+    queue.enqueue(
+        ingest_paper,
+        paper.id,
+    )
 
     return paper
 
