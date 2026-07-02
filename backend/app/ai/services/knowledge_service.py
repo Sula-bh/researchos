@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from datetime import UTC, datetime
 from uuid import UUID
 
@@ -9,6 +10,8 @@ from app.extensions import db
 from app.models.enums import AIStatus
 from app.models.paper import Paper
 from app.services.storage_service import get_file_path
+
+logger = logging.getLogger(__name__)
 
 
 class KnowledgeService:
@@ -28,6 +31,12 @@ class KnowledgeService:
         db.session.commit()
 
         try:
+            logger.info(
+                "Starting AI ingestion for paper %s",
+                paper.id,
+                paper.project_id
+            )
+            
             file_path = get_file_path(paper.storage_key)
 
             await self.provider.ingest_document(
@@ -41,13 +50,24 @@ class KnowledgeService:
 
             db.session.commit()
 
+            logger.info(
+                "Completed AI ingestion for paper %s",
+                paper.id,
+            )
+
         except AIIngestionError as error:
             paper.ai_status = AIStatus.FAILED
             paper.ai_error = str(error)
 
             db.session.commit()
 
+            logger.exception(
+                "AI ingestion failed for paper %s",
+                paper.id,
+            )
+
             raise
+            
 
     async def search(
         self,
