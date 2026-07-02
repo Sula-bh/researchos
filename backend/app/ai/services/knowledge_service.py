@@ -1,25 +1,53 @@
 from __future__ import annotations
 
-from pathlib import Path
+from datetime import UTC, datetime
 from uuid import UUID
 
 from app.ai.providers.cognee_provider import CogneeProvider
+from app.exceptions.ai import AIIngestionError
+from app.extensions import db
+from app.models.enums import AIStatus
+from app.models.paper import Paper
+from app.services.storage_service import get_file_path
 
 
 class KnowledgeService:
-    def __init__(self) -> None:
-        self.provider = CogneeProvider()
+    def __init__(
+        self,
+        provider: CogneeProvider | None = None,
+    ) -> None:
+        self.provider = provider or CogneeProvider()
 
     async def ingest_paper(
         self,
-        *,
-        project_id: UUID,
-        file_path: Path,
+        paper: Paper,
     ) -> None:
-        await self.provider.ingest_document(
-            project_id=project_id,
-            file_path=file_path,
-        )
+        paper.ai_status = AIStatus.PROCESSING
+        paper.ai_error = None
+
+        db.session.commit()
+
+        try:
+            file_path = get_file_path(paper.storage_key)
+
+            await self.provider.ingest_document(
+                project_id=paper.project_id,
+                file_path=file_path,
+            )
+
+            paper.ai_status = AIStatus.COMPLETED
+            paper.processed_at = datetime.now(UTC)
+            paper.ai_error = None
+
+            db.session.commit()
+
+        except AIIngestionError as error:
+            paper.ai_status = AIStatus.FAILED
+            paper.ai_error = str(error)
+
+            db.session.commit()
+
+            raise
 
     async def search(
         self,
