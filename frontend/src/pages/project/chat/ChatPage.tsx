@@ -20,6 +20,7 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<ChatMessageType[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [initialized, setInitialized] = useState(false);
 
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
@@ -65,26 +66,24 @@ export default function ChatPage() {
   useEffect(() => {
     if (!projectId) return;
 
-    const savedMessages = localStorage.getItem(`researchos-chat-${projectId}`);
+    const savedMessages = localStorage.getItem(storageKey);
 
-    if (!savedMessages) return;
-
-    try {
-      setMessages(JSON.parse(savedMessages) as ChatMessageType[]);
-    } catch {
-      localStorage.removeItem(`researchos-chat-${projectId}`);
-      setMessages([]);
+    if (savedMessages) {
+      try {
+        setMessages(JSON.parse(savedMessages) as ChatMessageType[]);
+      } catch {
+        localStorage.removeItem(storageKey);
+      }
     }
-  }, [projectId]);
+
+    setInitialized(true);
+  }, [projectId, storageKey]);
 
   useEffect(() => {
-    if (!projectId) return;
+    if (!initialized || !projectId) return;
 
-    localStorage.setItem(
-      `researchos-chat-${projectId}`,
-      JSON.stringify(messages),
-    );
-  }, [messages, projectId]);
+    localStorage.setItem(storageKey, JSON.stringify(messages));
+  }, [messages, initialized, projectId, storageKey]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({
