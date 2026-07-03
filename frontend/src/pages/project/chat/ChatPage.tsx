@@ -1,19 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
-import { Send } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
 import { chat } from "@/api/chatApi";
 import { getErrorMessage } from "@/lib/error";
-import type { ChatMessage } from "@/types/chat";
+import type { ChatMessageType } from "@/types/chat";
+
+import ChatEmptyState from "./components/ChatEmptyState";
+import ChatInput from "./components/ChatInput";
+import ChatMessage from "./components/ChatMessage";
 
 export default function ChatPage() {
   const { projectId } = useParams();
 
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<ChatMessageType[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -62,11 +62,15 @@ export default function ChatPage() {
     });
   }, [messages, loading]);
 
+  function handlePromptClick(prompt: string) {
+    setInput(prompt);
+  }
+
   return (
-    <div className="flex h-full flex-col space-y-6">
+    <div className="flex h-full flex-col">
       {/* Header */}
 
-      <div>
+      <div className="mb-6">
         <h1 className="text-2xl font-bold tracking-tight">Chat</h1>
 
         <p className="mt-2 text-muted-foreground">
@@ -76,63 +80,38 @@ export default function ChatPage() {
 
       {/* Messages */}
 
-      <div className="flex-1 space-y-4 overflow-y-auto rounded-lg border p-4">
+      <div className="flex-1 overflow-y-auto rounded-xl border bg-background p-6">
         {messages.length === 0 ? (
-          <p className="text-center text-muted-foreground">
-            Start a conversation by asking a question about your papers.
-          </p>
+          <ChatEmptyState onPromptClick={handlePromptClick} />
         ) : (
-          <>
+          <div className="space-y-6">
             {messages.map((message, index) => (
-              <div
-                key={index}
-                className={
-                  message.role === "user"
-                    ? "flex justify-end"
-                    : "flex justify-start"
-                }
-              >
-                <div
-                  className={
-                    message.role === "user"
-                      ? "max-w-[80%] rounded-lg bg-primary px-4 py-2 text-primary-foreground"
-                      : "max-w-[80%] rounded-lg bg-muted px-4 py-2"
-                  }
-                >
-                  {message.content}
-                </div>
-              </div>
+              <ChatMessage key={index} message={message} />
             ))}
+
             {loading && (
-              <div className="flex justify-start">
-                <div className="max-w-[80%] rounded-lg bg-muted px-4 py-2">
-                  Thinking...
-                </div>
-              </div>
+              <ChatMessage
+                message={{
+                  role: "assistant",
+                  content: "Thinking...",
+                }}
+              />
             )}
+
             <div ref={bottomRef} />
-          </>
+          </div>
         )}
       </div>
+
       {/* Input */}
 
-      <div className="flex gap-2">
-        <Input
-          placeholder="Ask a question about your papers..."
+      <div className="mt-4">
+        <ChatInput
           value={input}
-          onChange={(event) => setInput(event.target.value)}
-          onKeyDown={(event) => {
-            if (event.key === "Enter" && !event.shiftKey) {
-              event.preventDefault();
-              handleSend();
-            }
-          }}
-          disabled={loading}
+          loading={loading}
+          onChange={setInput}
+          onSend={handleSend}
         />
-
-        <Button onClick={handleSend} disabled={loading}>
-          <Send className="h-4 w-4" />
-        </Button>
       </div>
     </div>
   );
