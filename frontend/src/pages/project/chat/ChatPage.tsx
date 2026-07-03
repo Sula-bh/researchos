@@ -57,6 +57,30 @@ export default function ChatPage() {
   }
 
   useEffect(() => {
+    if (!projectId) return;
+
+    const savedMessages = localStorage.getItem(`researchos-chat-${projectId}`);
+
+    if (!savedMessages) return;
+
+    try {
+      setMessages(JSON.parse(savedMessages) as ChatMessageType[]);
+    } catch {
+      localStorage.removeItem(`researchos-chat-${projectId}`);
+      setMessages([]);
+    }
+  }, [projectId]);
+
+  useEffect(() => {
+    if (!projectId) return;
+
+    localStorage.setItem(
+      `researchos-chat-${projectId}`,
+      JSON.stringify(messages),
+    );
+  }, [messages, projectId]);
+
+  useEffect(() => {
     bottomRef.current?.scrollIntoView({
       behavior: "smooth",
     });
