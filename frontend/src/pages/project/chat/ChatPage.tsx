@@ -81,26 +81,25 @@ export default function ChatPage() {
       {/* Messages */}
 
       <div className="flex-1 overflow-y-auto rounded-xl border bg-background p-6">
-        {messages.length === 0 ? (
-          <ChatEmptyState onPromptClick={handlePromptClick} />
-        ) : (
-          <div className="space-y-6">
-            {messages.map((message, index) => (
-              <ChatMessage key={index} message={message} />
-            ))}
+        <ChatEmptyState onPromptClick={handlePromptClick} />
 
-            {loading && (
-              <ChatMessage
-                message={{
-                  role: "assistant",
-                  content: "Thinking...",
-                }}
-              />
-            )}
+        <div className="space-y-6">
+          {messages.map((message, index) => (
+            <ChatMessage key={index} message={message} />
+          ))}
 
-            <div ref={bottomRef} />
-          </div>
-        )}
+          {loading && (
+            <ChatMessage
+              loading
+              message={{
+                role: "assistant",
+                content: "",
+              }}
+            />
+          )}
+
+          <div ref={bottomRef} />
+        </div>
       </div>
 
       {/* Input */}
