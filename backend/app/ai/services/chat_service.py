@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from app.ai import knowledge_service
+from app.ai.services.knowledge_service import KnowledgeService
 from app.exceptions.chat import (
     EmptyMessageError,
     NoAnswerFoundError,
@@ -14,6 +14,7 @@ from app.models.paper import Paper
 from app.services.project_service import get_project
 from sqlalchemy import select
 
+knowledge_service = KnowledgeService()
 
 class ChatService:
     async def chat(
