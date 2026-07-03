@@ -4,8 +4,6 @@ import remarkGfm from "remark-gfm";
 
 import type { ChatMessageType } from "@/types/chat";
 
-import ChatSources from "./ChatSources";
-
 interface ChatMessageProps {
   message: ChatMessageType;
 }
@@ -64,8 +62,6 @@ export default function ChatMessage({ message }: ChatMessageProps) {
             >
               {message.content}
             </ReactMarkdown>
-
-            <ChatSources sources={message.sources} />
           </>
         )}
       </div>
