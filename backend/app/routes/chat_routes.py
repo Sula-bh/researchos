@@ -10,6 +10,7 @@ from app.schemas.chat_schema import ChatRequestSchema, ChatResponseSchema
 chat_bp = Blueprint(
     "chat",
     __name__,
+    url_prefix="/api"
 )
 
 request_schema = ChatRequestSchema()
@@ -32,5 +33,5 @@ def chat(
     )
 
     return success_response(
-        response_schema.dump(response),
+        data=response_schema.dump(response),
     )

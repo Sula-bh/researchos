@@ -42,7 +42,7 @@ class CogneeProvider(MemoryProvider):
             return await cognee.recall(
                 query_text=query,
                 datasets=[dataset_name],
-                search_type=SearchType.CHUNKS,
+                query_type=SearchType.CHUNKS,
                 include_references=True,
             )
         except Exception as error:
