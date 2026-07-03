@@ -3,12 +3,15 @@ from __future__ import annotations
 from uuid import UUID
 
 from app.ai import knowledge_service
-from app.exceptions.ai import AISearchError
-from app.exceptions.project import ProjectNotFoundError
+from app.exceptions.chat import (
+    EmptyMessageError,
+    NoAnswerFoundError,
+    NoProcessedPapersError,
+)
 from app.extensions import db
 from app.models.enums import AIStatus
 from app.models.paper import Paper
-from app.models.project import Project
+from app.services.project_service import get_project
 from sqlalchemy import select
 
 
@@ -22,17 +25,9 @@ class ChatService:
         message = message.strip()
 
         if not message:
-            raise AISearchError(
-                "Question cannot be empty.",
-            )
+            raise EmptyMessageError()
 
-        project = db.session.get(
-            Project,
-            project_id,
-        )
-
-        if project is None:
-            raise ProjectNotFoundError()
+        _ = get_project(project_id)
 
         statement = (
             select(Paper)
@@ -46,9 +41,7 @@ class ChatService:
         )
 
         if completed_paper is None:
-            raise AISearchError(
-                "No processed papers are available for this project.",
-            )
+            raise NoProcessedPapersError()
 
         results = await knowledge_service.search(
             project_id=project_id,
@@ -56,9 +49,7 @@ class ChatService:
         )
 
         if not results:
-            raise AISearchError(
-                "No relevant information was found.",
-            )
+            raise NoAnswerFoundError()
 
         return "\n\n".join(
             result.text
