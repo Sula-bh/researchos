@@ -37,4 +37,6 @@ export async function updateProject(
 
 export async function deleteProject(projectId: string): Promise<void> {
   await api.delete(`/projects/${projectId}`);
+
+  localStorage.removeItem(`researchos-chat-${projectId}`);
 }

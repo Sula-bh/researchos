@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
+import { Trash2 } from "lucide-react";
 
 import { chat } from "@/api/chatApi";
 import { getErrorMessage } from "@/lib/error";
@@ -12,6 +13,8 @@ import ChatMessage from "./components/ChatMessage";
 
 export default function ChatPage() {
   const { projectId } = useParams();
+
+  const storageKey = projectId ? `researchos-chat-${projectId}` : "";
 
   const [messages, setMessages] = useState<ChatMessageType[]>([]);
   const [input, setInput] = useState("");
@@ -90,16 +93,36 @@ export default function ChatPage() {
     setInput(prompt);
   }
 
+  function handleClearChat() {
+    if (!storageKey) return;
+
+    localStorage.removeItem(storageKey);
+
+    setMessages([]);
+  }
+
   return (
     <div className="flex h-full flex-col">
       {/* Header */}
 
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight">Chat</h1>
+      <div className="mb-6 flex items-start justify-between">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Chat</h1>
 
-        <p className="mt-2 text-muted-foreground">
-          Ask questions about your uploaded research papers.
-        </p>
+          <p className="mt-2 text-muted-foreground">
+            Ask questions about your uploaded research papers.
+          </p>
+        </div>
+
+        {messages.length > 0 && (
+          <button
+            onClick={handleClearChat}
+            className="flex items-center gap-2 rounded-md border px-3 py-2 text-sm hover:bg-muted"
+          >
+            <Trash2 className="h-4 w-4" />
+            Clear Chat
+          </button>
+        )}
       </div>
 
       {/* Messages */}
