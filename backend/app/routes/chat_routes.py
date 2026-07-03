@@ -1,9 +1,9 @@
-import asyncio
 from uuid import UUID
 
 from flask import Blueprint, request
 
 from app.ai import chat_service
+from app.ai.event_loop import loop
 from app.responses import success_response
 from app.schemas.chat_schema import ChatRequestSchema, ChatResponseSchema
 
@@ -25,7 +25,7 @@ def chat(
         request.get_json(),
     )
 
-    response = asyncio.run(
+    response = loop.run_until_complete(
         chat_service.chat(
             project_id=project_id,
             message=data["message"],
