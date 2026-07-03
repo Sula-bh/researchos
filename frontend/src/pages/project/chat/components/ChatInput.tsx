@@ -54,6 +54,7 @@ export default function ChatInput({
           bg-muted
           pr-14
           shadow-sm
+          shadow-black/50
           focus-visible:ring-1
           "
           onChange={(event) => onChange(event.target.value)}

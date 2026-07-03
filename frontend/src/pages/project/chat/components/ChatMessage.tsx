@@ -32,7 +32,7 @@ export default function ChatMessage({
       {/* Bubble */}
 
       <div
-        className={`max-w-[80%] rounded-xl px-4 py-3 shadow-sm ${
+        className={`max-w-[80%] rounded-xl px-4 py-3 shadow-md shadow-black/50${
           isUser ? "bg-primary text-primary-foreground" : "border bg-muted"
         }`}
       >
