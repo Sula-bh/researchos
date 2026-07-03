@@ -8,7 +8,7 @@ export interface ChatResponse {
   sources: ChatSource[];
 }
 
-export interface ChatMessage {
+export interface ChatMessageType {
   role: "user" | "assistant";
   content: string;
   sources?: ChatSource[];
