@@ -52,24 +52,17 @@ class ChatService:
         if not results:
             raise NoAnswerFoundError()
 
-        texts = []
-        sources = []
+        message = knowledge_service.format_results(results)
 
-        for result in results:
-            if hasattr(result, "text"):
-                text = result.text
-                if "Evidence:" in text:
-                    text = text.split("Evidence:")[0].strip()
-                texts.append(text)
-
-            sources.append(
-                {
-                    "source": result.source,
-                    "dataset": result.dataset_name,
-                }
-            )
+        sources = [
+            {
+                "source": result.source,
+                "dataset": result.dataset_name,
+            }
+            for result in results
+        ]
 
         return {
-            "message": "\n\n".join(texts),
+            "message": message,
             "sources": sources,
         }

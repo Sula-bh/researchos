@@ -79,6 +79,18 @@ class KnowledgeService:
             project_id=project_id,
             query=query,
         )
+    
+    def format_results(self, results) -> str:
+        text = "\n\n".join(
+            result.text
+            for result in results
+            if hasattr(result, "text")
+        )
+
+        if "Evidence:" in text:
+            text = text.split("Evidence:")[0].strip()
+
+        return text
 
     async def delete_project_knowledge(
         self,
