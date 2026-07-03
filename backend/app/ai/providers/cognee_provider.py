@@ -4,6 +4,7 @@ from pathlib import Path
 from uuid import UUID
 
 import cognee
+from cognee import SearchType
 
 from app.ai.providers.memory_provider import MemoryProvider
 from app.exceptions.ai import AIIngestionError, AISearchError
@@ -41,6 +42,8 @@ class CogneeProvider(MemoryProvider):
             return await cognee.recall(
                 query_text=query,
                 datasets=[dataset_name],
+                search_type=SearchType.CHUNKS,
+                include_references=True,
             )
         except Exception as error:
             raise AISearchError(

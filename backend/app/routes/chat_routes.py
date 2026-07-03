@@ -24,17 +24,13 @@ def chat(
         request.get_json(),
     )
 
-    answer = asyncio.run(
+    response = asyncio.run(
         chat_service.chat(
             project_id=project_id,
             message=data["message"],
         )
     )
 
-    response = response_schema.dump(
-        {
-            "answer": answer,
-        }
+    return success_response(
+        response_schema.dump(response),
     )
-
-    return success_response(response)

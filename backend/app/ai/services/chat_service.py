@@ -21,13 +21,13 @@ class ChatService:
         *,
         project_id: UUID,
         message: str,
-    ) -> str:
+    ) -> dict:
         message = message.strip()
 
         if not message:
             raise EmptyMessageError()
 
-        _ = get_project(project_id)
+        get_project(project_id)
 
         statement = (
             select(Paper)
@@ -51,8 +51,21 @@ class ChatService:
         if not results:
             raise NoAnswerFoundError()
 
-        return "\n\n".join(
-            result.text
-            for result in results
-            if hasattr(result, "text")
-        )
+        texts = []
+        sources = []
+
+        for result in results:
+            if hasattr(result, "text"):
+                texts.append(result.text)
+
+            sources.append(
+                {
+                    "source": result.source,
+                    "dataset": result.dataset_name,
+                }
+            )
+
+        return {
+            "message": "\n\n".join(texts),
+            "sources": sources,
+        }
