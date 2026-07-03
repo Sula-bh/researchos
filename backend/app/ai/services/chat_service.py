@@ -35,7 +35,7 @@ class ChatService:
             raise ProjectNotFoundError()
 
         statement = (
-            select(Paper.id)
+            select(Paper)
             .where(Paper.project_id == project_id)
             .where(Paper.ai_status == AIStatus.COMPLETED)
             .limit(1)
