@@ -10,6 +10,7 @@ import type { ChatMessageType } from "@/types/chat";
 import ChatEmptyState from "./components/ChatEmptyState";
 import ChatInput from "./components/ChatInput";
 import ChatMessage from "./components/ChatMessage";
+import DeleteChatDialog from "./components/DeleteChatDialog";
 
 export default function ChatPage() {
   const { projectId } = useParams();
@@ -19,6 +20,8 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<ChatMessageType[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -99,6 +102,10 @@ export default function ChatPage() {
     localStorage.removeItem(storageKey);
 
     setMessages([]);
+
+    setShowDeleteDialog(false);
+
+    toast.success("Chat cleared.");
   }
 
   return (
@@ -116,7 +123,7 @@ export default function ChatPage() {
 
         {messages.length > 0 && (
           <button
-            onClick={handleClearChat}
+            onClick={() => setShowDeleteDialog(true)}
             className="flex items-center gap-2 rounded-md border px-3 py-2 text-sm hover:bg-muted"
           >
             <Trash2 className="h-4 w-4" />
@@ -159,6 +166,11 @@ export default function ChatPage() {
           onSend={handleSend}
         />
       </div>
+      <DeleteChatDialog
+        open={showDeleteDialog}
+        onClose={() => setShowDeleteDialog(false)}
+        onDelete={handleClearChat}
+      />
     </div>
   );
 }
