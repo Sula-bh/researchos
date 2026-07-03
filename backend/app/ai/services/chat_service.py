@@ -57,7 +57,10 @@ class ChatService:
 
         for result in results:
             if hasattr(result, "text"):
-                texts.append(result.text)
+                text = result.text
+                if "Evidence:" in text:
+                    text = text.split("Evidence:")[0].strip()
+                texts.append(text)
 
             sources.append(
                 {
