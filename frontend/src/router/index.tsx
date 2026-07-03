@@ -3,7 +3,7 @@ import { createBrowserRouter } from "react-router-dom";
 import OverviewPage from "@/pages/project/OverviewPage";
 import ProjectPage from "@/pages/project/ProjectPage";
 import ProjectsPage from "@/pages/projects/ProjectsPage";
-import ChatPage from "@/pages/project/ChatPage";
+import ChatPage from "@/pages/project/chat/ChatPage";
 import PapersPage from "@/pages/project/papers/PapersPage";
 import NotesPage from "@/pages/project/notes/NotesPage";
 import NoteEditorPage from "@/pages/project/notes/NoteEditorPage";
