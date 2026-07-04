@@ -1,3 +1,5 @@
+import type { AIStatus } from "./ai";
+
 export interface Paper {
   id: string;
   project_id: string;
@@ -9,7 +11,7 @@ export interface Paper {
   file_name: string;
   storage_key: string;
 
-  ai_status: string;
+  ai_status: AIStatus;
   ai_summary: string | null;
   ai_error: string | null;
   processed_at: string | null;
