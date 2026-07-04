@@ -2,7 +2,6 @@ import { Loader2, Sparkles } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-import { Button } from "@/components/ui/button";
 import type { Paper } from "@/types/paper";
 import { AIStatus } from "@/types/ai";
 
@@ -57,17 +56,37 @@ export default function AISummaryCard({ paper }: AISummaryCardProps) {
       {/* Completed */}
 
       {paper.ai_status === AIStatus.Completed && (
-        <>
-          <div className="prose prose-sm mt-6 max-w-none dark:prose-invert">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {paper.ai_summary ?? ""}
-            </ReactMarkdown>
-          </div>
-
-          <div className="mt-6">
-            <Button>Generate AI Note</Button>
-          </div>
-        </>
+        <div className="mt-6">
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            components={{
+              h2: ({ children }) => (
+                <h2 className="mt-6 mb-3 text-xl font-semibold">{children}</h2>
+              ),
+              h3: ({ children }) => (
+                <h3 className="mt-5 mb-2 text-lg font-semibold">{children}</h3>
+              ),
+              p: ({ children }) => <p className="mb-3 leading-7">{children}</p>,
+              ul: ({ children }) => (
+                <ul className="mb-3 list-disc pl-6">{children}</ul>
+              ),
+              ol: ({ children }) => (
+                <ol className="mb-3 list-decimal pl-6">{children}</ol>
+              ),
+              li: ({ children }) => <li className="mb-1">{children}</li>,
+              strong: ({ children }) => (
+                <strong className="font-semibold">{children}</strong>
+              ),
+              code: ({ children }) => (
+                <code className="rounded bg-muted px-1 py-0.5 font-mono text-sm">
+                  {children}
+                </code>
+              ),
+            }}
+          >
+            {paper.ai_summary ?? ""}
+          </ReactMarkdown>
+        </div>
       )}
     </section>
   );
