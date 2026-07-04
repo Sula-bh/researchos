@@ -61,6 +61,7 @@ def upload_paper(project_id: UUID, file: FileStorage) -> Paper:
     default_queue.enqueue(
         ingest_paper,
         paper.id,
+        job_timeout="15m",
     )
 
     return paper
