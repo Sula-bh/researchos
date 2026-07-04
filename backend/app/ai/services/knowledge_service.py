@@ -21,6 +21,14 @@ class KnowledgeService:
     ) -> None:
         self.provider = provider or CogneeProvider()
 
+    @staticmethod
+    def dataset_name(
+        *,
+        project_id: UUID,
+        paper_id: UUID,
+    ) -> str:
+        return f"project:{project_id}:paper:{paper_id}"
+
     async def ingest_paper(
         self,
         paper: Paper,
@@ -34,16 +42,29 @@ class KnowledgeService:
             logger.info(
                 "Starting AI ingestion for paper %s",
                 paper.id,
-                paper.project_id
             )
-            
-            file_path = get_file_path(paper.storage_key)
+
+            file_path = get_file_path(
+                paper.storage_key,
+            )
+
+            dataset_name = self.dataset_name(
+                project_id=paper.project_id,
+                paper_id=paper.id,
+            )
 
             await self.provider.ingest_document(
-                project_id=paper.project_id,
+                dataset_name=dataset_name,
                 file_path=file_path,
             )
 
+            from app.ai import summary_service
+
+            summary = await summary_service.generate_summary(
+                paper=paper,
+            )
+
+            paper.ai_summary = summary
             paper.ai_status = AIStatus.COMPLETED
             paper.processed_at = datetime.now(UTC)
             paper.ai_error = None
@@ -67,20 +88,22 @@ class KnowledgeService:
             )
 
             raise
-            
 
     async def search(
         self,
         *,
-        project_id: UUID,
+        datasets: list[str],
         query: str,
     ):
         return await self.provider.search(
-            project_id=project_id,
+            datasets=datasets,
             query=query,
         )
-    
-    def format_results(self, results) -> str:
+
+    def format_results(
+        self,
+        results,
+    ) -> str:
         text = "\n\n".join(
             result.text
             for result in results
@@ -92,11 +115,11 @@ class KnowledgeService:
 
         return text
 
-    async def delete_project_knowledge(
+    async def delete_dataset(
         self,
         *,
-        project_id: UUID,
+        dataset_name: str,
     ) -> None:
-        await self.provider.forget_project(
-            project_id=project_id,
+        await self.provider.forget_dataset(
+            dataset_name=dataset_name,
         )
