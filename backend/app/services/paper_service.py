@@ -1,9 +1,12 @@
+import asyncio
+import logging
 from uuid import UUID
 
 from flask import send_file
 from sqlalchemy import select
 from werkzeug.datastructures import FileStorage
 
+from app.ai import knowledge_service
 from app.ai.tasks.ingest_paper import ingest_paper
 from app.exceptions.file import InvalidFileError
 from app.exceptions.paper import PaperNotFoundError
@@ -17,6 +20,8 @@ from app.services.storage_service import (
     get_file_path,
     save_pdf,
 )
+
+logger = logging.getLogger(__name__)
 
 
 def get_papers(project_id: UUID) -> list[Paper]:
@@ -69,6 +74,23 @@ def upload_paper(project_id: UUID, file: FileStorage) -> Paper:
 
 def delete_paper(paper_id: UUID) -> None:
     paper = get_paper(paper_id)
+
+    dataset_name = knowledge_service.dataset_name(
+        project_id=paper.project_id,
+        paper_id=paper.id,
+    )
+
+    try:
+        asyncio.run(
+            knowledge_service.delete_dataset(
+                dataset_name=dataset_name,
+            )
+        )
+    except Exception:
+        logger.exception(
+            "Failed to delete Cognee dataset %s",
+            dataset_name,
+        )
 
     delete_file(paper.storage_key)
 
