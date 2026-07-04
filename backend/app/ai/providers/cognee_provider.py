@@ -1,30 +1,24 @@
 from __future__ import annotations
 
 from pathlib import Path
-from uuid import UUID
 
 import cognee
-from cognee import SearchType
 
 from app.ai.providers.memory_provider import MemoryProvider
 from app.exceptions.ai import AIIngestionError, AISearchError
 
 
 class CogneeProvider(MemoryProvider):
-    @staticmethod
-    def _dataset_name(project_id: UUID) -> str:
-        return f"project:{project_id}"
-
     async def ingest_document(
         self,
         *,
-        project_id: UUID,
+        dataset_name: str,
         file_path: Path,
     ) -> None:
         try:
             await cognee.remember(
                 str(file_path),
-                dataset_name=self._dataset_name(project_id),
+                dataset_name=dataset_name,
             )
         except Exception as error:
             raise AIIngestionError(
@@ -34,14 +28,13 @@ class CogneeProvider(MemoryProvider):
     async def search(
         self,
         *,
-        project_id: UUID,
+        datasets: list[str],
         query: str,
     ):
-        dataset_name = self._dataset_name(project_id)
         try:
             return await cognee.recall(
                 query_text=query,
-                datasets=[dataset_name],
+                datasets=datasets,
                 include_references=True,
             )
         except Exception as error:
@@ -49,13 +42,11 @@ class CogneeProvider(MemoryProvider):
                 f"Failed to search knowledge base: {error}"
             ) from error
 
-    async def forget_project(
+    async def forget_dataset(
         self,
         *,
-        project_id: UUID,
+        dataset_name: str,
     ) -> None:
-        dataset_name = self._dataset_name(project_id)
-
         await cognee.forget(
             dataset=dataset_name
         )
