@@ -34,18 +34,23 @@ class ChatService:
             select(Paper)
             .where(Paper.project_id == project_id)
             .where(Paper.ai_status == AIStatus.COMPLETED)
-            .limit(1)
         )
 
-        completed_paper = db.session.scalar(
-            statement,
-        )
+        completed_papers = db.session.scalars(statement).all()
 
-        if completed_paper is None:
+        if not completed_papers:
             raise NoProcessedPapersError()
+        
+        datasets = [
+            knowledge_service.dataset_name(
+                project_id=paper.project_id,
+                paper_id=paper.id,
+            )
+            for paper in completed_papers
+        ]
 
         results = await knowledge_service.search(
-            project_id=project_id,
+            datasets=datasets,
             query=message,
         )
 
