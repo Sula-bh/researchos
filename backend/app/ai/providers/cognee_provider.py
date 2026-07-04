@@ -19,6 +19,7 @@ class CogneeProvider(MemoryProvider):
             await cognee.remember(
                 str(file_path),
                 dataset_name=dataset_name,
+                self_improvement=False
             )
         except Exception as error:
             raise AIIngestionError(

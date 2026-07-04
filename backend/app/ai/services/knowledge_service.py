@@ -10,6 +10,7 @@ from app.extensions import db
 from app.models.enums import AIStatus
 from app.models.paper import Paper
 from app.services.storage_service import get_file_path
+from sqlalchemy.exc import SQLAlchemyError
 
 logger = logging.getLogger(__name__)
 
@@ -31,11 +32,23 @@ class KnowledgeService:
 
     async def ingest_paper(
         self,
-        paper: Paper,
+        *,
+        paper_id: UUID,
     ) -> None:
+        paper = db.session.get(
+            Paper,
+            paper_id,
+        )
+
+        if paper is None:
+            logger.warning(
+                "Paper %s not found.",
+                paper_id,
+            )
+            return
+
         paper.ai_status = AIStatus.PROCESSING
         paper.ai_error = None
-
         db.session.commit()
 
         try:
@@ -64,6 +77,20 @@ class KnowledgeService:
                 paper=paper,
             )
 
+            db.session.remove()
+
+            paper = db.session.get(
+                Paper,
+                paper_id,
+            )
+
+            if paper is None:
+                logger.warning(
+                    "Paper %s was deleted during ingestion.",
+                    paper_id,
+                )
+                return
+
             paper.ai_summary = summary
             paper.ai_status = AIStatus.COMPLETED
             paper.processed_at = datetime.now(UTC)
@@ -77,15 +104,26 @@ class KnowledgeService:
             )
 
         except AIIngestionError as error:
-            paper.ai_status = AIStatus.FAILED
-            paper.ai_error = str(error)
-
-            db.session.commit()
-
             logger.exception(
                 "AI ingestion failed for paper %s",
-                paper.id,
+                paper_id,
             )
+
+            db.session.remove()
+
+            paper = db.session.get(
+                Paper,
+                paper_id,
+            )
+
+            if paper is not None:
+                paper.ai_status = AIStatus.FAILED
+                paper.ai_error = str(error)
+
+                try:
+                    db.session.commit()
+                except SQLAlchemyError:
+                    db.session.remove()
 
             raise
 

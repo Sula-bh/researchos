@@ -15,6 +15,11 @@ class Config:
         os.getenv("SQLALCHEMY_TRACK_MODIFICATIONS", "False").lower() == "true"
     )
 
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        "pool_pre_ping": True,
+        "pool_recycle": 300,
+    }
+
     BASE_DIR = Path(__file__).resolve().parent.parent
 
     UPLOAD_DIR = BASE_DIR / "uploads"
