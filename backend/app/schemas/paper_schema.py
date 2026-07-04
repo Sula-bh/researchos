@@ -16,4 +16,12 @@ class PaperResponseSchema(Schema):
 
     storage_key = fields.String()
 
+    ai_status = fields.String()
+
+    ai_summary = fields.String(allow_none=True)
+
+    ai_error = fields.String(allow_none=True)
+
+    processed_at = fields.DateTime(allow_none=True)
+
     created_at = fields.DateTime()
