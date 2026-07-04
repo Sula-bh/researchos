@@ -3,7 +3,6 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any
-from uuid import UUID
 
 
 class MemoryProvider(ABC):
@@ -11,24 +10,24 @@ class MemoryProvider(ABC):
     async def ingest_document(
         self,
         *,
-        project_id: UUID,
+        dataset_name: str,
         file_path: Path,
     ) -> None:
-        """Store a document for a project."""
+        """Store a document inside a dataset."""
 
     @abstractmethod
     async def search(
         self,
         *,
-        project_id: UUID,
+        datasets: list[str],
         query: str,
     ) -> list[Any]:
-        """Search a project's knowledge."""
+        """Search one or more datasets."""
 
     @abstractmethod
-    async def forget_project(
+    async def forget_dataset(
         self,
         *,
-        project_id: UUID,
+        dataset_name: str,
     ) -> None:
-        """Delete all knowledge belonging to a project."""
+        """Delete a dataset."""
