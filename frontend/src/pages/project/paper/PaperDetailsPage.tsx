@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowLeft, ExternalLink, FileText } from "lucide-react";
+import { ArrowLeft, ExternalLink } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -7,6 +7,8 @@ import { getPaper, openPaper } from "@/api/paperApi";
 import { Button } from "@/components/ui/button";
 import { getErrorMessage } from "@/lib/error";
 import type { Paper } from "@/types/paper";
+import AISummaryCard from "./components/AISummaryCard";
+import { AIStatus } from "@/types/ai";
 
 export default function PaperDetailsPage() {
   const { paperId } = useParams();
@@ -15,6 +17,7 @@ export default function PaperDetailsPage() {
 
   useEffect(() => {
     if (!paperId) return;
+
     const id = paperId;
 
     async function loadPaper() {
@@ -30,6 +33,26 @@ export default function PaperDetailsPage() {
     loadPaper();
   }, [paperId]);
 
+  useEffect(() => {
+    if (paper?.ai_status !== AIStatus.Processing) {
+      return;
+    }
+
+    const interval = window.setInterval(async () => {
+      if (!paperId) return;
+
+      try {
+        const updatedPaper = await getPaper(paperId);
+
+        setPaper(updatedPaper);
+      } catch {
+        // Ignore polling errors.
+      }
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [paper?.ai_status, paperId]);
+
   if (!paper) {
     return (
       <div className="flex h-60 items-center justify-center text-muted-foreground">
@@ -37,6 +60,8 @@ export default function PaperDetailsPage() {
       </div>
     );
   }
+
+  console.log(paper);
 
   return (
     <div className="mx-auto max-w-5xl space-y-8">
@@ -83,17 +108,7 @@ export default function PaperDetailsPage() {
 
       {/* AI Summary */}
 
-      <section className="rounded-xl border p-6">
-        <div className="flex items-center gap-3">
-          <FileText className="h-5 w-5" />
-
-          <h2 className="font-semibold">AI Summary</h2>
-        </div>
-
-        <p className="mt-3 text-muted-foreground">
-          AI summaries will appear here after the paper has been processed.
-        </p>
-      </section>
+      <AISummaryCard paper={paper} />
 
       {/* Notes */}
 
