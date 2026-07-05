@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { toast } from "sonner";
 import { Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { chat } from "@/api/chatApi";
+import { Button } from "@/components/ui/button";
 import { getErrorMessage } from "@/lib/error";
 import type { ChatMessageType } from "@/types/chat";
 
@@ -11,6 +12,13 @@ import ChatEmptyState from "./components/ChatEmptyState";
 import ChatInput from "./components/ChatInput";
 import ChatMessage from "./components/ChatMessage";
 import DeleteChatDialog from "./components/DeleteChatDialog";
+
+const QUICK_PROMPTS = [
+  "Compare the uploaded papers.",
+  "What research gaps have you identified?",
+  "What contradictions exist across these papers?",
+  "What should I investigate next?",
+];
 
 export default function ChatPage() {
   const { projectId } = useParams();
@@ -70,7 +78,7 @@ export default function ChatPage() {
 
     if (savedMessages) {
       try {
-        setMessages(JSON.parse(savedMessages) as ChatMessageType[]);
+        setMessages(JSON.parse(savedMessages));
       } catch {
         localStorage.removeItem(storageKey);
       }
@@ -96,58 +104,83 @@ export default function ChatPage() {
   }
 
   function handleClearChat() {
-    if (!storageKey) return;
-
     localStorage.removeItem(storageKey);
 
     setMessages([]);
 
     setShowDeleteDialog(false);
 
-    toast.success("Chat cleared.");
+    toast.success("Conversation cleared.");
   }
 
   return (
     <div className="flex h-full flex-col">
-      {/* Messages */}
+      <div className="flex-1 overflow-y-auto rounded-xl border bg-background">
+        {/* Toolbar */}
 
-      <div className="flex-1 overflow-y-auto rounded-xl border bg-background p-6">
-        <ChatEmptyState onPromptClick={handlePromptClick} />
-
-        <div className="space-y-6">
-          {messages.map((message, index) => (
-            <ChatMessage key={index} message={message} />
-          ))}
-
-          <div className="mb-6 flex items-center justify-between">
-            <h2 className="text-lg font-semibold">Conversation</h2>
-
-            {messages.length > 0 && (
-              <button
-                onClick={() => setShowDeleteDialog(true)}
-                className="flex items-center gap-2 rounded-md border px-3 py-2 text-sm transition-colors hover:bg-muted"
-              >
-                <Trash2 className="h-4 w-4" />
-                Clear Conversation
-              </button>
-            )}
-          </div>
-
-          {loading && (
-            <ChatMessage
-              loading
-              message={{
-                role: "assistant",
-                content: "",
-              }}
-            />
+        <div className="sticky top-0 z-10 flex justify-end border-b bg-background/95 px-6 py-3 backdrop-blur">
+          {messages.length > 0 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowDeleteDialog(true)}
+            >
+              <Trash2 className="mr-2 h-4 w-4" />
+              Clear
+            </Button>
           )}
+        </div>
 
-          <div ref={bottomRef} />
+        <div className="p-6">
+          {messages.length === 0 ? (
+            <ChatEmptyState onPromptClick={handlePromptClick} />
+          ) : (
+            <>
+              {/* Compact prompt bar */}
+
+              <div className="mb-8">
+                <p className="mb-3 text-sm font-medium text-muted-foreground">
+                  Continue exploring
+                </p>
+
+                <div className="flex flex-wrap gap-2">
+                  {QUICK_PROMPTS.map((prompt) => (
+                    <Button
+                      key={prompt}
+                      variant="outline"
+                      size="sm"
+                      className="rounded-full"
+                      onClick={() => handlePromptClick(prompt)}
+                    >
+                      {prompt}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Conversation */}
+
+              <div className="space-y-6">
+                {messages.map((message, index) => (
+                  <ChatMessage key={index} message={message} />
+                ))}
+
+                {loading && (
+                  <ChatMessage
+                    loading
+                    message={{
+                      role: "assistant",
+                      content: "",
+                    }}
+                  />
+                )}
+
+                <div ref={bottomRef} />
+              </div>
+            </>
+          )}
         </div>
       </div>
-
-      {/* Input */}
 
       <div className="mt-4">
         <ChatInput
@@ -157,6 +190,7 @@ export default function ChatPage() {
           onSend={handleSend}
         />
       </div>
+
       <DeleteChatDialog
         open={showDeleteDialog}
         onClose={() => setShowDeleteDialog(false)}

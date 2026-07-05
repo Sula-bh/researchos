@@ -7,17 +7,15 @@ interface ChatEmptyStateProps {
 }
 
 const SUGGESTED_PROMPTS = [
-  "Summarize the current state of this research project.",
   "Compare the uploaded papers.",
   "What research gaps have you identified?",
   "What contradictions exist across these papers?",
   "What should I investigate next?",
-  "Which ideas appear most frequently?",
 ];
 
 export default function ChatEmptyState({ onPromptClick }: ChatEmptyStateProps) {
   return (
-    <div className="flex h-full flex-col items-center justify-center px-6 text-center">
+    <div className="flex flex-col items-center py-10 text-center">
       <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
         <Bot className="h-10 w-10 text-primary" />
       </div>
@@ -34,8 +32,7 @@ export default function ChatEmptyState({ onPromptClick }: ChatEmptyStateProps) {
         {SUGGESTED_PROMPTS.map((prompt) => (
           <Button
             key={prompt}
-            variant="secondary"
-            className="rounded-full"
+            variant="outline"
             onClick={() => onPromptClick(prompt)}
           >
             {prompt}

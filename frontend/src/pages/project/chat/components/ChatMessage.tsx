@@ -41,7 +41,7 @@ export default function ChatMessage({
         ) : loading ? (
           <div className="flex items-center gap-3">
             <span className="text-sm text-muted-foreground">
-              Analyzing papers
+              Searching my research memory
             </span>
 
             <div className="flex items-center gap-1">
