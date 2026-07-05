@@ -49,7 +49,7 @@ const navItems = [
     icon: BrainCircuit,
   },
   {
-    label: "Chat",
+    label: "Research Companion",
     to: "chat",
     icon: MessageSquare,
   },

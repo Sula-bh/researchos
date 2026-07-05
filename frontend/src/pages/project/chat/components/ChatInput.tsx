@@ -43,7 +43,7 @@ export default function ChatInput({
           value={value}
           disabled={loading}
           rows={1}
-          placeholder="Ask a question about your papers..."
+          placeholder="Ask your research companion..."
           className="
           max-h-40
           min-h-14

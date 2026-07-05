@@ -109,28 +109,6 @@ export default function ChatPage() {
 
   return (
     <div className="flex h-full flex-col">
-      {/* Header */}
-
-      <div className="mb-6 flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Chat</h1>
-
-          <p className="mt-2 text-muted-foreground">
-            Ask questions about your uploaded research papers.
-          </p>
-        </div>
-
-        {messages.length > 0 && (
-          <button
-            onClick={() => setShowDeleteDialog(true)}
-            className="flex items-center gap-2 rounded-md border px-3 py-2 text-sm hover:bg-muted"
-          >
-            <Trash2 className="h-4 w-4" />
-            Clear Chat
-          </button>
-        )}
-      </div>
-
       {/* Messages */}
 
       <div className="flex-1 overflow-y-auto rounded-xl border bg-background p-6">
@@ -140,6 +118,20 @@ export default function ChatPage() {
           {messages.map((message, index) => (
             <ChatMessage key={index} message={message} />
           ))}
+
+          <div className="mb-6 flex items-center justify-between">
+            <h2 className="text-lg font-semibold">Conversation</h2>
+
+            {messages.length > 0 && (
+              <button
+                onClick={() => setShowDeleteDialog(true)}
+                className="flex items-center gap-2 rounded-md border px-3 py-2 text-sm transition-colors hover:bg-muted"
+              >
+                <Trash2 className="h-4 w-4" />
+                Clear Conversation
+              </button>
+            )}
+          </div>
 
           {loading && (
             <ChatMessage
