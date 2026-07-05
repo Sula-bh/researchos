@@ -68,7 +68,7 @@ export default function CreateProjectDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="h-11 rounded-[12px] bg-[#5b3df2] px-4 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(91,61,242,0.22)] hover:bg-[#4f35f2]">
+        <Button className="h-11 rounded-xl bg-[#5b3df2] px-4 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(91,61,242,0.22)] hover:bg-[#4f35f2]">
           <Plus className="mr-2 h-4 w-4" />
           New Project
         </Button>
@@ -98,7 +98,7 @@ export default function CreateProjectDialog({
                   <FormControl>
                     <Input
                       placeholder="Cyberbullying Detection"
-                      className="h-11 rounded-[12px] border-[#e1dcff] bg-[#fbfaff] focus-visible:border-[#7459ff] focus-visible:ring-[#7459ff]/20"
+                      className="h-11 rounded-xl border-[#e1dcff] bg-[#fbfaff] focus-visible:border-[#7459ff] focus-visible:ring-[#7459ff]/20"
                       {...field}
                     />
                   </FormControl>
@@ -119,7 +119,7 @@ export default function CreateProjectDialog({
                     <Textarea
                       rows={5}
                       placeholder="Describe your research project..."
-                      className="min-h-32 rounded-[12px] border-[#e1dcff] bg-[#fbfaff] focus-visible:border-[#7459ff] focus-visible:ring-[#7459ff]/20"
+                      className="min-h-32 rounded-xl border-[#e1dcff] bg-[#fbfaff] focus-visible:border-[#7459ff] focus-visible:ring-[#7459ff]/20"
                       {...field}
                     />
                   </FormControl>
@@ -133,7 +133,7 @@ export default function CreateProjectDialog({
               <Button
                 type="button"
                 variant="outline"
-                className="h-10 rounded-[12px] border-[#dcd7ff] text-[#4b5875] hover:bg-[#f8f6ff]"
+                className="h-10 rounded-xl border-[#dcd7ff] text-[#4b5875] hover:bg-[#f8f6ff]"
                 onClick={() => setOpen(false)}
               >
                 Cancel
@@ -142,7 +142,7 @@ export default function CreateProjectDialog({
               <Button
                 type="submit"
                 disabled={form.formState.isSubmitting}
-                className="h-10 rounded-[12px] bg-[#5b3df2] px-4 text-white hover:bg-[#4f35f2]"
+                className="h-10 rounded-xl bg-[#5b3df2] px-4 text-white hover:bg-[#4f35f2]"
               >
                 {form.formState.isSubmitting ? "Creating..." : "Create Project"}
               </Button>
