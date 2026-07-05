@@ -154,7 +154,7 @@ export default function NoteEditorPage() {
       <Button
         variant="ghost"
         asChild
-        className="rounded-[12px] text-[#65708c] hover:bg-[#f1efff] hover:text-[#4f35f2]"
+        className="rounded-xl text-[#65708c] hover:bg-[#f1efff] hover:text-[#4f35f2]"
       >
         <Link to={`/projects/${projectId}/notes`}>
           <ArrowLeft className="mr-2 h-4 w-4" />

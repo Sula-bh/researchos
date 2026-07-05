@@ -77,7 +77,7 @@ export default function ExperimentCard({
       </CardHeader>
 
       <CardContent className="space-y-5 px-5 pt-4 pb-5">
-        <p className="line-clamp-3 min-h-[4.5rem] text-sm leading-6 text-[#65708c]">
+        <p className="line-clamp-3 min-h-18 text-sm leading-6 text-[#65708c]">
           {experiment.objective || "No objective yet."}
         </p>
 

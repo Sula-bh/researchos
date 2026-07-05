@@ -72,10 +72,6 @@ export default function NotesPage() {
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <div className="mb-4 inline-flex rounded-b-[6px] bg-[#5b3df2] px-5 py-2 text-xs font-bold uppercase tracking-wide text-white shadow-[0_12px_24px_rgba(91,61,242,0.22)]">
-            Notes
-          </div>
-
           <h1 className="text-2xl font-bold tracking-tight text-[#111832]">
             Notes
           </h1>
@@ -87,7 +83,7 @@ export default function NotesPage() {
 
         <Button
           asChild
-          className="h-11 rounded-[12px] bg-[#5b3df2] px-4 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(91,61,242,0.22)] hover:bg-[#4f35f2]"
+          className="h-11 rounded-xl bg-[#5b3df2] px-4 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(91,61,242,0.22)] hover:bg-[#4f35f2]"
         >
           <Link to="new">
             <Plus className="mr-2 h-4 w-4" />
@@ -98,7 +94,7 @@ export default function NotesPage() {
 
       {/* Search */}
 
-      <div className="rounded-[16px] border border-[#e1dcff] bg-white p-4 shadow-[0_18px_50px_rgba(72,56,178,0.06)]">
+      <div className="rounded-2xl border border-[#e1dcff] bg-white p-4 shadow-[0_18px_50px_rgba(72,56,178,0.06)]">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#65708c]" />
 
@@ -106,7 +102,7 @@ export default function NotesPage() {
             placeholder="Search notes..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="h-11 rounded-[12px] border-[#e1dcff] bg-[#fbfaff] pl-10 text-sm shadow-none placeholder:text-[#98a0b7] focus-visible:border-[#7459ff] focus-visible:ring-[#7459ff]/20"
+            className="h-11 rounded-xl border-[#e1dcff] bg-[#fbfaff] pl-10 text-sm shadow-none placeholder:text-[#98a0b7] focus-visible:border-[#7459ff] focus-visible:ring-[#7459ff]/20"
           />
         </div>
       </div>
@@ -115,7 +111,7 @@ export default function NotesPage() {
 
       {filteredNotes.length === 0 ? (
         notes.length === 0 ? (
-          <div className="flex flex-col items-center rounded-[16px] border border-dashed border-[#cfc8ff] bg-white py-20 shadow-[0_18px_50px_rgba(72,56,178,0.05)]">
+          <div className="flex flex-col items-center rounded-2xl border border-dashed border-[#cfc8ff] bg-white py-20 shadow-[0_18px_50px_rgba(72,56,178,0.05)]">
             <div className="rounded-[18px] bg-[#fff7e8] p-4">
               <FileText className="h-10 w-10 text-[#f59e0b]" />
             </div>
@@ -131,7 +127,7 @@ export default function NotesPage() {
             <div className="mt-8">
               <Button
                 asChild
-                className="h-11 rounded-[12px] bg-[#5b3df2] px-4 text-sm font-semibold text-white hover:bg-[#4f35f2]"
+                className="h-11 rounded-xl bg-[#5b3df2] px-4 text-sm font-semibold text-white hover:bg-[#4f35f2]"
               >
                 <Link to="new">
                   <Plus className="mr-2 h-4 w-4" />
@@ -141,16 +137,14 @@ export default function NotesPage() {
             </div>
           </div>
         ) : (
-          <div className="flex flex-col items-center rounded-[16px] border border-dashed border-[#cfc8ff] bg-white py-20 shadow-[0_18px_50px_rgba(72,56,178,0.05)]">
+          <div className="flex flex-col items-center rounded-2xl border border-dashed border-[#cfc8ff] bg-white py-20 shadow-[0_18px_50px_rgba(72,56,178,0.05)]">
             <Search className="h-10 w-10 text-[#65708c]" />
 
             <h2 className="mt-6 text-xl font-semibold text-[#111832]">
               No matching notes
             </h2>
 
-            <p className="mt-2 text-[#65708c]">
-              Try another search term.
-            </p>
+            <p className="mt-2 text-[#65708c]">Try another search term.</p>
           </div>
         )
       ) : (

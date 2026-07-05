@@ -76,10 +76,6 @@ export default function PaperDetailsPage() {
       {/* Header */}
 
       <div className="rounded-[18px] border border-[#e1dcff] bg-white p-6 shadow-[0_18px_50px_rgba(72,56,178,0.07)]">
-        <div className="mb-4 inline-flex rounded-b-md bg-[#5b3df2] px-5 py-2 text-xs font-bold uppercase tracking-wide text-white shadow-[0_12px_24px_rgba(91,61,242,0.22)]">
-          Paper Details
-        </div>
-
         <h1 className="text-3xl font-bold tracking-tight text-[#111832]">
           {paper.title}
         </h1>
