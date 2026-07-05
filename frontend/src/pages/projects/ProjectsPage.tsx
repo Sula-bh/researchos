@@ -104,7 +104,7 @@ export default function ProjectsPage() {
               </h1>
 
               <p className="mt-2 text-sm text-[#65708c]">
-                Here is what is happening with your research.
+                Here is what's happening with your research.
               </p>
             </div>
 
