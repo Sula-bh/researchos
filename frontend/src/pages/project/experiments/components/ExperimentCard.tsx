@@ -37,18 +37,30 @@ export default function ExperimentCard({
       onClick={() =>
         navigate(`/projects/${projectId}/experiments/${experiment.id}`)
       }
-      className="cursor-pointer transition-all hover:border-primary/20 hover:shadow-md"
+      className="cursor-pointer rounded-[14px] border-[#e1dcff] bg-white py-0 shadow-[0_12px_30px_rgba(72,56,178,0.06)] transition-all hover:-translate-y-0.5 hover:border-[#c7bcff] hover:shadow-[0_18px_42px_rgba(72,56,178,0.12)]"
     >
-      <CardHeader className="flex flex-row items-start justify-between">
-        <div className="space-y-2">
-          <CardTitle>{experiment.title}</CardTitle>
+      <CardHeader className="flex flex-row items-start justify-between gap-3 px-5 pt-5 pb-0">
+        <div className="min-w-0 space-y-3">
+          <div className="flex items-center gap-3">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] bg-[#e9fbf3] text-[#10b981]">
+              <FlaskConical className="h-5 w-5" />
+            </span>
+
+            <CardTitle className="truncate text-base font-bold text-[#111832]">
+              {experiment.title}
+            </CardTitle>
+          </div>
 
           <StatusBadge status={experiment.status} />
         </div>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-            <Button variant="ghost" size="icon">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 rounded-[10px] text-[#65708c] hover:bg-[#f1efff] hover:text-[#4f35f2]"
+            >
               <MoreVertical className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -64,14 +76,14 @@ export default function ExperimentCard({
         </DropdownMenu>
       </CardHeader>
 
-      <CardContent className="space-y-4">
-        <p className="line-clamp-3 text-sm text-muted-foreground">
+      <CardContent className="space-y-5 px-5 pt-4 pb-5">
+        <p className="line-clamp-3 min-h-[4.5rem] text-sm leading-6 text-[#65708c]">
           {experiment.objective || "No objective yet."}
         </p>
 
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
+        <div className="flex items-center justify-between gap-3 border-t border-[#eeeaff] pt-4 text-xs text-[#65708c]">
           <div className="flex items-center gap-2">
-            <FlaskConical className="h-4 w-4" />
+            <FlaskConical className="h-4 w-4 text-[#10b981]" />
             Experiment
           </div>
 
