@@ -11,17 +11,19 @@ interface AISummaryCardProps {
 
 export default function AISummaryCard({ paper }: AISummaryCardProps) {
   return (
-    <section className="rounded-xl border p-6">
+    <section className="rounded-[18px] border border-[#dcd7ff] bg-white p-6 shadow-[0_18px_50px_rgba(72,56,178,0.07)]">
       <div className="flex items-center gap-3">
-        <Sparkles className="h-5 w-5 text-primary" />
+        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#f1efff] text-[#5b3df2]">
+          <Sparkles className="h-5 w-5" />
+        </span>
 
-        <h2 className="font-semibold">AI Summary</h2>
+        <h2 className="font-semibold text-[#111832]">AI Summary</h2>
       </div>
 
       {/* Pending */}
 
       {paper.ai_status === AIStatus.Pending && (
-        <p className="mt-4 text-muted-foreground">
+        <p className="mt-4 rounded-[14px] border border-[#eeeaff] bg-[#fbfaff] p-4 text-[#65708c]">
           This paper is waiting to be processed.
         </p>
       )}
@@ -29,8 +31,8 @@ export default function AISummaryCard({ paper }: AISummaryCardProps) {
       {/* Processing */}
 
       {paper.ai_status === AIStatus.Processing && (
-        <div className="mt-4 flex items-center gap-3 text-muted-foreground">
-          <Loader2 className="h-4 w-4 animate-spin" />
+        <div className="mt-4 flex items-center gap-3 rounded-[14px] border border-[#eeeaff] bg-[#fbfaff] p-4 text-[#65708c]">
+          <Loader2 className="h-4 w-4 animate-spin text-[#5b3df2]" />
 
           <span>
             AI is analyzing this paper and generating a summary. The summary
@@ -42,13 +44,11 @@ export default function AISummaryCard({ paper }: AISummaryCardProps) {
       {/* Failed */}
 
       {paper.ai_status === AIStatus.Failed && (
-        <div className="mt-4 rounded-lg border border-destructive/30 bg-destructive/5 p-4">
+        <div className="mt-4 rounded-[14px] border border-red-200 bg-red-50 p-4">
           <p className="font-medium text-destructive">AI processing failed.</p>
 
           {paper.ai_error && (
-            <p className="mt-2 text-sm text-muted-foreground">
-              {paper.ai_error}
-            </p>
+            <p className="mt-2 text-sm text-[#65708c]">{paper.ai_error}</p>
           )}
         </div>
       )}
@@ -56,15 +56,19 @@ export default function AISummaryCard({ paper }: AISummaryCardProps) {
       {/* Completed */}
 
       {paper.ai_status === AIStatus.Completed && (
-        <div className="mt-6">
+        <div className="mt-6 rounded-[14px] border border-[#eeeaff] bg-[#fbfaff] p-5 text-[#4b5875]">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
               h2: ({ children }) => (
-                <h2 className="mt-6 mb-3 text-xl font-semibold">{children}</h2>
+                <h2 className="mt-6 mb-3 text-xl font-semibold text-[#111832] first:mt-0">
+                  {children}
+                </h2>
               ),
               h3: ({ children }) => (
-                <h3 className="mt-5 mb-2 text-lg font-semibold">{children}</h3>
+                <h3 className="mt-5 mb-2 text-lg font-semibold text-[#111832]">
+                  {children}
+                </h3>
               ),
               p: ({ children }) => <p className="mb-3 leading-7">{children}</p>,
               ul: ({ children }) => (
@@ -78,7 +82,7 @@ export default function AISummaryCard({ paper }: AISummaryCardProps) {
                 <strong className="font-semibold">{children}</strong>
               ),
               code: ({ children }) => (
-                <code className="rounded bg-muted px-1 py-0.5 font-mono text-sm">
+                <code className="rounded-md bg-[#f1efff] px-1.5 py-0.5 font-mono text-sm text-[#2415ac]">
                   {children}
                 </code>
               ),

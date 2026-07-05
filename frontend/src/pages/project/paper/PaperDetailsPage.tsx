@@ -55,7 +55,7 @@ export default function PaperDetailsPage() {
 
   if (!paper) {
     return (
-      <div className="flex h-60 items-center justify-center text-muted-foreground">
+      <div className="flex h-60 items-center justify-center rounded-2xl border border-[#e1dcff] bg-white text-[#65708c] shadow-[0_18px_50px_rgba(72,56,178,0.06)]">
         Loading paper...
       </div>
     );
@@ -64,10 +64,10 @@ export default function PaperDetailsPage() {
   console.log(paper);
 
   return (
-    <div className="mx-auto max-w-5xl space-y-8">
+    <div className="mx-auto max-w-5xl space-y-6">
       <Link
         to="../"
-        className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+        className="inline-flex items-center gap-2 rounded-xl px-1 text-sm font-semibold text-[#65708c] transition-colors hover:text-[#4f35f2]"
       >
         <ArrowLeft className="h-4 w-4" />
         Back to Papers
@@ -75,21 +75,27 @@ export default function PaperDetailsPage() {
 
       {/* Header */}
 
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">{paper.title}</h1>
+      <div className="rounded-[18px] border border-[#e1dcff] bg-white p-6 shadow-[0_18px_50px_rgba(72,56,178,0.07)]">
+        <div className="mb-4 inline-flex rounded-b-md bg-[#5b3df2] px-5 py-2 text-xs font-bold uppercase tracking-wide text-white shadow-[0_12px_24px_rgba(91,61,242,0.22)]">
+          Paper Details
+        </div>
 
-        <p className="mt-2 text-muted-foreground">
+        <h1 className="text-3xl font-bold tracking-tight text-[#111832]">
+          {paper.title}
+        </h1>
+
+        <p className="mt-3 text-sm text-[#65708c]">
           {paper.authors ?? "Unknown author"}
         </p>
       </div>
 
       {/* Abstract */}
 
-      <section className="space-y-3">
-        <h2 className="text-lg font-semibold">Abstract</h2>
+      <section className="space-y-3 rounded-[18px] border border-[#e1dcff] bg-white p-6 shadow-[0_18px_50px_rgba(72,56,178,0.06)]">
+        <h2 className="text-lg font-semibold text-[#111832]">Abstract</h2>
 
-        <div className="rounded-xl border p-6">
-          <p className="whitespace-pre-line leading-7 text-muted-foreground">
+        <div className="rounded-[14px] border border-[#eeeaff] bg-[#fbfaff] p-5">
+          <p className="whitespace-pre-line leading-7 text-[#4b5875]">
             {paper.abstract || "No abstract available."}
           </p>
         </div>
@@ -97,10 +103,13 @@ export default function PaperDetailsPage() {
 
       {/* Actions */}
 
-      <section className="space-y-3">
-        <h2 className="text-lg font-semibold">Actions</h2>
+      <section className="space-y-3 rounded-[18px] border border-[#e1dcff] bg-white p-6 shadow-[0_18px_50px_rgba(72,56,178,0.06)]">
+        <h2 className="text-lg font-semibold text-[#111832]">Actions</h2>
 
-        <Button onClick={() => openPaper(paper.id)}>
+        <Button
+          onClick={() => openPaper(paper.id)}
+          className="h-11 rounded-xl bg-[#5b3df2] px-4 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(91,61,242,0.22)] hover:bg-[#4f35f2]"
+        >
           <ExternalLink className="mr-2 h-4 w-4" />
           Open PDF
         </Button>
@@ -112,10 +121,10 @@ export default function PaperDetailsPage() {
 
       {/* Notes */}
 
-      <section className="rounded-xl border p-6">
-        <h2 className="font-semibold">Notes</h2>
+      <section className="rounded-[18px] border border-[#e1dcff] bg-white p-6 shadow-[0_18px_50px_rgba(72,56,178,0.06)]">
+        <h2 className="font-semibold text-[#111832]">Notes</h2>
 
-        <p className="mt-3 text-muted-foreground">
+        <p className="mt-3 text-[#65708c]">
           Research notes for this paper will appear here.
         </p>
       </section>

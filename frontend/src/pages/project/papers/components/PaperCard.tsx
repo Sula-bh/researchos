@@ -28,23 +28,25 @@ export default function PaperCard({ paper, onDelete }: PaperCardProps) {
 
   return (
     <Card
-      className="cursor-pointer transition-all hover:shadow-md"
+      className="cursor-pointer rounded-[14px] border-[#e1dcff] bg-white py-0 shadow-none transition-all hover:border-[#c7bcff] hover:bg-[#fbfaff] hover:shadow-[0_12px_30px_rgba(72,56,178,0.08)]"
       onClick={handleOpenDetails}
     >
-      <CardContent className="flex items-start justify-between p-5">
-        <div className="flex gap-4">
-          <div className="rounded-lg bg-primary/10 p-3">
-            <FileText className="h-6 w-6 text-primary" />
+      <CardContent className="flex items-start justify-between gap-4 p-4">
+        <div className="flex min-w-0 gap-4">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-[#fff0f0] text-[#ef4444]">
+            <FileText className="h-6 w-6" />
           </div>
 
-          <div className="space-y-1">
-            <h3 className="font-semibold">{paper.title}</h3>
+          <div className="min-w-0 space-y-1">
+            <h3 className="truncate font-semibold text-[#111832]">
+              {paper.title}
+            </h3>
 
-            <p className="text-sm text-muted-foreground">
+            <p className="truncate text-sm text-[#65708c]">
               {paper.authors ?? "Unknown author"}
             </p>
 
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-[#98a0b7]">
               Uploaded{" "}
               {new Date(paper.created_at).toLocaleDateString(undefined, {
                 day: "numeric",
@@ -57,7 +59,11 @@ export default function PaperCard({ paper, onDelete }: PaperCardProps) {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-            <Button variant="ghost" size="icon">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 rounded-[10px] text-[#65708c] hover:bg-[#f1efff] hover:text-[#4f35f2]"
+            >
               <MoreVertical className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
