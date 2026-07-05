@@ -13,13 +13,6 @@ import ChatInput from "./components/ChatInput";
 import ChatMessage from "./components/ChatMessage";
 import DeleteChatDialog from "./components/DeleteChatDialog";
 
-const QUICK_PROMPTS = [
-  "Compare the uploaded papers.",
-  "What research gaps have you identified?",
-  "What contradictions exist across these papers?",
-  "What should I investigate next?",
-];
-
 export default function ChatPage() {
   const { projectId } = useParams();
 
@@ -114,75 +107,48 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex-1 overflow-y-auto rounded-xl border bg-background">
-        {/* Toolbar */}
-
-        <div className="sticky top-0 z-10 flex justify-end border-b bg-background/95 px-6 py-3 backdrop-blur">
+    <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-[18px] border border-[#cdc8ff] bg-white text-[#121832] shadow-[0_26px_80px_rgba(72,56,178,0.1)]">
+      <div className="min-h-0 flex-1 overflow-y-auto bg-white">
+        <section className="relative overflow-hidden border-b border-[#ded9ff] bg-[radial-gradient(circle_at_18%_18%,rgba(116,89,255,0.09),transparent_12rem),radial-gradient(circle_at_82%_24%,rgba(116,89,255,0.08),transparent_13rem),linear-gradient(180deg,#fff_0%,#fbfaff_100%)]">
           {messages.length > 0 && (
             <Button
               variant="ghost"
-              size="sm"
+              size="lg"
               onClick={() => setShowDeleteDialog(true)}
+              className="absolute right-6 top-6 z-20 h-12 rounded-[14px] border border-[#d7d1ff] bg-white/70 px-5 text-base font-medium text-[#2415ac] shadow-sm backdrop-blur hover:bg-white hover:text-[#4f35f2] max-sm:right-4 max-sm:top-4 max-sm:size-11 max-sm:px-0"
             >
-              <Trash2 className="mr-2 h-4 w-4" />
-              Clear
+              <Trash2 className="h-5 w-5 sm:mr-2" />
+              <span className="max-sm:hidden">Clear Conversation</span>
             </Button>
           )}
-        </div>
 
-        <div className="p-6">
-          {messages.length === 0 ? (
-            <ChatEmptyState onPromptClick={handlePromptClick} />
-          ) : (
-            <>
-              {/* Compact prompt bar */}
+          <ChatEmptyState onPromptClick={handlePromptClick} />
+        </section>
 
-              <div className="mb-8">
-                <p className="mb-3 text-sm font-medium text-muted-foreground">
-                  Continue exploring
-                </p>
+        {(messages.length > 0 || loading) && (
+          <section className="min-h-70 border-b border-[#e1dcff] bg-white px-6 py-7 sm:px-10 sm:py-8">
+            <div className="space-y-8">
+              {messages.map((message, index) => (
+                <ChatMessage key={index} message={message} />
+              ))}
 
-                <div className="flex flex-wrap gap-2">
-                  {QUICK_PROMPTS.map((prompt) => (
-                    <Button
-                      key={prompt}
-                      variant="outline"
-                      size="sm"
-                      className="rounded-full"
-                      onClick={() => handlePromptClick(prompt)}
-                    >
-                      {prompt}
-                    </Button>
-                  ))}
-                </div>
-              </div>
+              {loading && (
+                <ChatMessage
+                  loading
+                  message={{
+                    role: "assistant",
+                    content: "",
+                  }}
+                />
+              )}
 
-              {/* Conversation */}
-
-              <div className="space-y-6">
-                {messages.map((message, index) => (
-                  <ChatMessage key={index} message={message} />
-                ))}
-
-                {loading && (
-                  <ChatMessage
-                    loading
-                    message={{
-                      role: "assistant",
-                      content: "",
-                    }}
-                  />
-                )}
-
-                <div ref={bottomRef} />
-              </div>
-            </>
-          )}
-        </div>
+              <div ref={bottomRef} />
+            </div>
+          </section>
+        )}
       </div>
 
-      <div className="mt-4">
+      <div className="bg-white px-6 py-6 sm:px-8">
         <ChatInput
           value={input}
           loading={loading}

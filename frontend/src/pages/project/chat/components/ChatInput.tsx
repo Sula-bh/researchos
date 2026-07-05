@@ -36,8 +36,8 @@ export default function ChatInput({
   }, [value]);
 
   return (
-    <div className="border-t pt-4">
-      <div className="relative">
+    <div className="flex">
+      <div className="relative flex-1">
         <Textarea
           ref={inputRef}
           value={value}
@@ -46,16 +46,24 @@ export default function ChatInput({
           placeholder="Ask your research companion..."
           className="
           max-h-40
-          min-h-14
+          min-h-19.5
           resize-none
           overflow-y-auto
-          rounded-2xl
-          border-0
-          bg-muted
-          pr-14
-          shadow-sm
-          shadow-black/50
-          focus-visible:ring-1
+          rounded-[18px]
+          border
+          border-[#c7bcff]
+          bg-white
+          px-7
+          py-6
+          pr-24
+          text-lg
+          leading-7
+          text-[#111832]
+          shadow-[0_14px_34px_rgba(86,63,220,0.13)]
+          focus-visible:border-[#8f7cff]
+          focus-visible:ring-3
+          focus-visible:ring-[#8f7cff]/30
+          placeholder:text-[#65708c]
           "
           onChange={(event) => onChange(event.target.value)}
           onKeyDown={(event) => {
@@ -70,12 +78,12 @@ export default function ChatInput({
           size="icon"
           disabled={loading || !value.trim()}
           onClick={onSend}
-          className="absolute bottom-2 right-2 h-9 w-9 rounded-full"
+          className="absolute right-4 top-1/2 h-14 w-14 -translate-y-1/2 rounded-[14px] bg-[#5a37f2] text-white shadow-[0_12px_24px_rgba(78,52,231,0.28)] hover:bg-[#4d2be8] disabled:bg-[#5a37f2] disabled:opacity-55"
         >
           {loading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <Loader2 className="h-6 w-6 animate-spin" />
           ) : (
-            <Send className="h-4 w-4" />
+            <Send className="h-6 w-6" />
           )}
         </Button>
       </div>
