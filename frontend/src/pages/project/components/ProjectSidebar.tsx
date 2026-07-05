@@ -1,6 +1,5 @@
 import {
   BrainCircuit,
-  Calendar,
   FileText,
   FlaskConical,
   Home,
@@ -39,16 +38,6 @@ const navItems = [
     icon: NotebookPen,
   },
   {
-    label: "Timeline",
-    to: "timeline",
-    icon: Calendar,
-  },
-  {
-    label: "Knowledge Graph",
-    to: "graph",
-    icon: BrainCircuit,
-  },
-  {
     label: "Research Companion",
     to: "chat",
     icon: MessageSquare,
@@ -57,37 +46,45 @@ const navItems = [
 
 export default function ProjectSidebar({ project }: ProjectSidebarProps) {
   return (
-    <aside className="flex h-screen w-64 flex-col border-r bg-background">
+    <aside className="flex h-screen w-67.5 shrink-0 flex-col border-r border-[#e6e1ff] bg-white shadow-[14px_0_45px_rgba(72,56,178,0.05)]">
       {/* Logo */}
 
       <Link
         to="/"
-        className="flex items-center gap-2 px-6 py-5 border-b hover:bg-muted/50 transition-colors"
+        className="flex items-center gap-3 border-b border-[#eeeaff] px-6 py-5 transition-colors hover:bg-[#fbfaff]"
       >
-        <BrainCircuit className="h-6 w-6 text-primary" />
+        <span className="flex h-10 w-10 items-center justify-center rounded-[14px] bg-[#5b3df2] text-white shadow-[0_12px_24px_rgba(91,61,242,0.22)]">
+          <BrainCircuit className="h-6 w-6" />
+        </span>
 
-        <span className="text-lg font-bold tracking-tight">ResearchOS</span>
+        <span className="text-lg font-bold tracking-tight text-[#111832]">
+          ResearchOS
+        </span>
       </Link>
 
       {/* Current Project */}
 
-      <div className="border-b p-4">
-        <button className="flex w-full items-center justify-between rounded-lg border px-3 py-2 transition-colors hover:bg-muted">
-          <div className="text-left">
-            <p className="truncate font-medium">
+      <div className="border-b border-[#eeeaff] p-4">
+        <button className="flex w-full items-center justify-between gap-3 rounded-[14px] border border-[#e1dcff] bg-[#fbfaff] px-3 py-3 transition-colors hover:bg-[#f4f1ff]">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-[#5b3df2] shadow-sm">
+            <BrainCircuit className="h-5 w-5" />
+          </span>
+
+          <div className="min-w-0 flex-1 text-left">
+            <p className="truncate text-sm font-semibold text-[#111832]">
               {project?.title ?? "Loading..."}
             </p>
 
-            <p className="text-xs text-muted-foreground">Current project</p>
+            <p className="text-xs text-[#65708c]">Current project</p>
           </div>
 
-          <ChevronsUpDown className="h-4 w-4 text-muted-foreground" />
+          <ChevronsUpDown className="h-4 w-4 shrink-0 text-[#65708c]" />
         </button>
       </div>
 
       {/* Navigation */}
 
-      <nav className="flex-1 space-y-1 p-3">
+      <nav className="flex-1 space-y-1.5 p-3">
         {navItems.map(({ label, to, icon: Icon }) => (
           <NavLink
             key={to}
@@ -95,26 +92,26 @@ export default function ProjectSidebar({ project }: ProjectSidebarProps) {
             end={to === ""}
             className={({ isActive }) =>
               `
-              flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all
+              flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-all
               ${
                 isActive
-                  ? "bg-primary text-primary-foreground shadow-sm shadow-black/50"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  ? "bg-[#f1efff] text-[#4f35f2]"
+                  : "text-[#4b5875] hover:bg-[#f8f6ff] hover:text-[#2415ac]"
               }
               `
             }
           >
-            <Icon className="h-4 w-4" />
+            <Icon className="h-4 w-4 shrink-0" />
 
-            {label}
+            <span className="truncate">{label}</span>
           </NavLink>
         ))}
       </nav>
 
       {/* Footer */}
 
-      <div className="border-t p-3">
-        <button className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
+      <div className="border-t border-[#eeeaff] p-3">
+        <button className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-[#4b5875] transition-colors hover:bg-[#f8f6ff] hover:text-[#2415ac]">
           <Settings className="h-4 w-4" />
           Project Settings
         </button>
