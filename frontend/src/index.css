@@ -7,6 +7,36 @@
   --font-sans: "Inter", sans-serif;
 }
 
+:root {
+  --background: #fbfaff;
+  --foreground: #111832;
+
+  --card: #ffffff;
+  --card-foreground: #111832;
+
+  --primary: #5b3df2;
+  --primary-foreground: #ffffff;
+
+  --secondary: #f1efff;
+  --secondary-foreground: #2415ac;
+
+  --muted: #f6f4ff;
+  --muted-foreground: #65708c;
+
+  --accent: #f1efff;
+  --accent-foreground: #2415ac;
+
+  --popover: #ffffff;
+  --popover-foreground: #111832;
+
+  --input: #dcd7ff;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+
+  --border: #e1dcff;
+  --ring: #7459ff;
+}
+
 @layer base {
   * {
     border-color: var(--border);
@@ -18,7 +48,10 @@
   }
 
   body {
-    background-color: var(--background);
+    background:
+      radial-gradient(circle at 10% 0%, rgb(116 89 255 / 0.08), transparent 22rem),
+      radial-gradient(circle at 94% 10%, rgb(91 61 242 / 0.07), transparent 24rem),
+      var(--background);
     color: var(--foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
@@ -37,5 +70,19 @@
 
   ::-moz-selection {
     background-color: hsl(220 90% 70% / 0.35);
+  }
+
+  [data-lexical-editor="true"] {
+    color: #111832;
+  }
+
+  .mdxeditor-toolbar {
+    border-color: #e1dcff !important;
+    background: #f8f6ff !important;
+  }
+
+  .mdxeditor-toolbar button,
+  .mdxeditor-toolbar [role="button"] {
+    border-radius: 0.625rem !important;
   }
 }
