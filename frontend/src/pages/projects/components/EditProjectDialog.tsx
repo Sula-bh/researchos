@@ -84,11 +84,13 @@ export default function EditProjectDialog({
         if (!open) onClose();
       }}
     >
-      <DialogContent>
+      <DialogContent className="rounded-[18px] border-[#dcd7ff] bg-white p-7 shadow-[0_24px_80px_rgba(72,56,178,0.18)]">
         <DialogHeader>
-          <DialogTitle>Edit Project</DialogTitle>
+          <DialogTitle className="text-xl font-bold text-[#111832]">
+            Edit Project
+          </DialogTitle>
 
-          <DialogDescription>
+          <DialogDescription className="text-[#65708c]">
             Update your project information.
           </DialogDescription>
         </DialogHeader>
@@ -103,7 +105,10 @@ export default function EditProjectDialog({
                   <FormLabel>Project Title</FormLabel>
 
                   <FormControl>
-                    <Input {...field} />
+                    <Input
+                      className="h-11 rounded-xl border-[#e1dcff] bg-[#fbfaff] focus-visible:border-[#7459ff] focus-visible:ring-[#7459ff]/20"
+                      {...field}
+                    />
                   </FormControl>
 
                   <FormMessage />
@@ -119,7 +124,11 @@ export default function EditProjectDialog({
                   <FormLabel>Description</FormLabel>
 
                   <FormControl>
-                    <Textarea rows={5} {...field} />
+                    <Textarea
+                      rows={5}
+                      className="min-h-32 rounded-xl border-[#e1dcff] bg-[#fbfaff] focus-visible:border-[#7459ff] focus-visible:ring-[#7459ff]/20"
+                      {...field}
+                    />
                   </FormControl>
 
                   <FormMessage />
@@ -128,11 +137,20 @@ export default function EditProjectDialog({
             />
 
             <div className="flex justify-end gap-3">
-              <Button type="button" variant="outline" onClick={onClose}>
+              <Button
+                type="button"
+                variant="outline"
+                className="h-10 rounded-xl border-[#dcd7ff] text-[#4b5875] hover:bg-[#f8f6ff]"
+                onClick={onClose}
+              >
                 Cancel
               </Button>
 
-              <Button type="submit" disabled={form.formState.isSubmitting}>
+              <Button
+                type="submit"
+                disabled={form.formState.isSubmitting}
+                className="h-10 rounded-xl bg-[#5b3df2] px-4 text-white hover:bg-[#4f35f2]"
+              >
                 {form.formState.isSubmitting ? "Saving..." : "Save Changes"}
               </Button>
             </div>

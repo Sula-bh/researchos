@@ -68,17 +68,19 @@ export default function CreateProjectDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
+        <Button className="h-11 rounded-[12px] bg-[#5b3df2] px-4 text-sm font-semibold text-white shadow-[0_12px_24px_rgba(91,61,242,0.22)] hover:bg-[#4f35f2]">
           <Plus className="mr-2 h-4 w-4" />
           New Project
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="rounded-[18px] border-[#dcd7ff] bg-white p-7 shadow-[0_24px_80px_rgba(72,56,178,0.18)] sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Create Project</DialogTitle>
+          <DialogTitle className="text-xl font-bold text-[#111832]">
+            Create Project
+          </DialogTitle>
 
-          <DialogDescription>
+          <DialogDescription className="text-[#65708c]">
             Create a new research project to organize papers, notes and
             experiments.
           </DialogDescription>
@@ -94,7 +96,11 @@ export default function CreateProjectDialog({
                   <FormLabel>Project Title</FormLabel>
 
                   <FormControl>
-                    <Input placeholder="Cyberbullying Detection" {...field} />
+                    <Input
+                      placeholder="Cyberbullying Detection"
+                      className="h-11 rounded-[12px] border-[#e1dcff] bg-[#fbfaff] focus-visible:border-[#7459ff] focus-visible:ring-[#7459ff]/20"
+                      {...field}
+                    />
                   </FormControl>
 
                   <FormMessage />
@@ -113,6 +119,7 @@ export default function CreateProjectDialog({
                     <Textarea
                       rows={5}
                       placeholder="Describe your research project..."
+                      className="min-h-32 rounded-[12px] border-[#e1dcff] bg-[#fbfaff] focus-visible:border-[#7459ff] focus-visible:ring-[#7459ff]/20"
                       {...field}
                     />
                   </FormControl>
@@ -126,12 +133,17 @@ export default function CreateProjectDialog({
               <Button
                 type="button"
                 variant="outline"
+                className="h-10 rounded-[12px] border-[#dcd7ff] text-[#4b5875] hover:bg-[#f8f6ff]"
                 onClick={() => setOpen(false)}
               >
                 Cancel
               </Button>
 
-              <Button type="submit" disabled={form.formState.isSubmitting}>
+              <Button
+                type="submit"
+                disabled={form.formState.isSubmitting}
+                className="h-10 rounded-[12px] bg-[#5b3df2] px-4 text-white hover:bg-[#4f35f2]"
+              >
                 {form.formState.isSubmitting ? "Creating..." : "Create Project"}
               </Button>
             </div>

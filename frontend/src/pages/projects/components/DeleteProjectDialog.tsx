@@ -53,22 +53,30 @@ export default function DeleteProjectDialog({
         if (!open) onClose();
       }}
     >
-      <AlertDialogContent>
+      <AlertDialogContent className="rounded-[18px] border border-[#ffd7d7] bg-white p-6 shadow-[0_24px_80px_rgba(72,56,178,0.16)]">
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete Project?</AlertDialogTitle>
+          <AlertDialogTitle className="text-lg font-bold text-[#111832]">
+            Delete Project?
+          </AlertDialogTitle>
 
-          <AlertDialogDescription>
+          <AlertDialogDescription className="text-[#65708c]">
             This will permanently delete <strong>{project?.title}</strong> and
             all of its papers, notes, experiments, chats and knowledge graph.
             This action cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+        <AlertDialogFooter className="border-[#eeeaff] bg-[#fbfaff]">
+          <AlertDialogCancel className="rounded-xl border-[#dcd7ff]">
+            Cancel
+          </AlertDialogCancel>
 
           <AlertDialogAction asChild>
-            <Button variant="destructive" onClick={handleDelete}>
+            <Button
+              variant="destructive"
+              className="rounded-xl"
+              onClick={handleDelete}
+            >
               Delete Project
             </Button>
           </AlertDialogAction>
