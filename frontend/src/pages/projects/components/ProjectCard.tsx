@@ -87,20 +87,6 @@ export default function ProjectCard({
             {project.description || "No description provided."}
           </p>
 
-          <div>
-            <div className="mb-1 flex items-center justify-between text-[11px] font-semibold text-[#4b5875]">
-              <span>Progress</span>
-              <span>{30 + (project.title.length % 6) * 8}%</span>
-            </div>
-
-            <div className="h-1.5 overflow-hidden rounded-full bg-[#eeeaff]">
-              <div
-                className="h-full rounded-full bg-[#5b3df2]"
-                style={{ width: `${30 + (project.title.length % 6) * 8}%` }}
-              />
-            </div>
-          </div>
-
           <div className="flex items-center gap-2 text-xs text-[#65708c]">
             <Calendar className="h-4 w-4 text-[#5b3df2]" />
 
