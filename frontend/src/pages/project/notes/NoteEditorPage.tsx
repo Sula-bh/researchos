@@ -141,17 +141,21 @@ export default function NoteEditorPage() {
 
   if (loading) {
     return (
-      <div className="space-y-6">
-        <Skeleton className="h-8 w-40" />
-        <Skeleton className="h-12 w-80" />
-        <Skeleton className="h-150 w-full rounded-xl" />
+      <div className="mx-auto max-w-6xl space-y-6">
+        <Skeleton className="h-8 w-40 bg-[#eeeaff]" />
+        <Skeleton className="h-12 w-80 bg-[#eeeaff]" />
+        <Skeleton className="h-150 w-full rounded-[18px] bg-[#eeeaff]" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-8">
-      <Button variant="ghost" asChild>
+    <div className="mx-auto max-w-6xl space-y-6">
+      <Button
+        variant="ghost"
+        asChild
+        className="rounded-[12px] text-[#65708c] hover:bg-[#f1efff] hover:text-[#4f35f2]"
+      >
         <Link to={`/projects/${projectId}/notes`}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Notes

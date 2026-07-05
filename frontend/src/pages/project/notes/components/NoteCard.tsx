@@ -25,24 +25,26 @@ export default function NoteCard({ note, onDelete }: NoteCardProps) {
 
   return (
     <Card
-      className="cursor-pointer transition-all hover:border-primary/20 hover:shadow-md"
+      className="cursor-pointer rounded-[14px] border-[#eadbbd] bg-[#fffbf3] py-0 shadow-[0_12px_30px_rgba(130,82,0,0.05)] transition-all hover:-translate-y-0.5 hover:border-[#f2c66d] hover:shadow-[0_18px_42px_rgba(130,82,0,0.1)]"
       onClick={() => navigate(`/projects/${projectId}/notes/${note.id}`)}
     >
       {/* Clickable Area */}
-      <CardContent className="relative z-10 flex items-start justify-between p-5">
+      <CardContent className="relative z-10 flex items-start justify-between gap-4 p-5">
         <div className="flex min-w-0 flex-1 gap-4">
-          <div className="rounded-lg bg-primary/10 p-3">
-            <FileText className="h-6 w-6 text-primary" />
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] bg-white text-[#f59e0b] shadow-sm">
+            <FileText className="h-6 w-6" />
           </div>
 
           <div className="min-w-0 flex-1 space-y-2">
-            <h3 className="truncate font-semibold">{note.title}</h3>
+            <h3 className="truncate font-semibold text-[#111832]">
+              {note.title}
+            </h3>
 
-            <p className="line-clamp-3 text-sm text-muted-foreground">
+            <p className="line-clamp-3 text-sm leading-6 text-[#5f5a4f]">
               {note.content}
             </p>
 
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-[#9a8462]">
               Updated {formatDateTime(note.updated_at)}
             </p>
           </div>
@@ -51,7 +53,11 @@ export default function NoteCard({ note, onDelete }: NoteCardProps) {
         {/* Menu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-            <Button variant="ghost" size="icon" className="relative z-20">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative z-20 h-9 w-9 rounded-[10px] text-[#9a8462] hover:bg-white hover:text-[#4f35f2]"
+            >
               <MoreVertical className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
