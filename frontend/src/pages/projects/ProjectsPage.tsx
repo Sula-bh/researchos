@@ -100,7 +100,7 @@ export default function ProjectsPage() {
               </div>
 
               <h1 className="text-3xl mt-4 font-bold tracking-tight">
-                Good morning, Researcher
+                Welcome back, Researcher
               </h1>
 
               <p className="mt-2 text-sm text-[#65708c]">
