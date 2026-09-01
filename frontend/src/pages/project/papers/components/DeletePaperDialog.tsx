@@ -11,6 +11,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
+import { Button } from "@/components/ui/button";
+
 type DeletePaperDialogProps = {
   paper: Paper | null;
   onClose: () => void;
@@ -29,19 +31,31 @@ export default function DeletePaperDialog({
         if (!open) onClose();
       }}
     >
-      <AlertDialogContent>
+      <AlertDialogContent className="rounded-[18px] border border-[#ffd7d7] bg-white p-6 shadow-[0_24px_80px_rgba(72,56,178,0.16)]">
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete "{paper?.title}"?</AlertDialogTitle>
+          <AlertDialogTitle className="text-lg font-bold text-[#111832]">
+            Delete "{paper?.title}"?
+          </AlertDialogTitle>
 
-          <AlertDialogDescription>
+          <AlertDialogDescription className="text-[#65708c]">
             This action cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+        <AlertDialogFooter className="border-[#eeeaff] bg-[#fbfaff]">
+          <AlertDialogCancel className="rounded-xl border-[#dcd7ff]">
+            Cancel
+          </AlertDialogCancel>
 
-          <AlertDialogAction onClick={onDelete}>Delete</AlertDialogAction>
+          <AlertDialogAction asChild>
+            <Button
+              variant="destructive"
+              className="rounded-xl"
+              onClick={onDelete}
+            >
+              Delete
+            </Button>
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
