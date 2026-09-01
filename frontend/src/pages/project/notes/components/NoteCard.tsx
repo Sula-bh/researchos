@@ -62,7 +62,11 @@ export default function NoteCard({ note, onDelete }: NoteCardProps) {
             </Button>
           </DropdownMenuTrigger>
 
-          <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
+          <DropdownMenuContent
+            align="end"
+            onClick={(e) => e.stopPropagation()}
+            className="rounded-[18px] border border-[#ffd7d7] bg-white shadow-[0_24px_80px_rgba(72,56,178,0.16)]"
+          >
             <DropdownMenuItem
               onClick={() => onDelete(note)}
               className="text-destructive"
