@@ -12,8 +12,18 @@ import ExperimentsPage from "@/pages/project/experiments/ExperimentsPage";
 import ExperimentEditorPage from "@/pages/project/experiments/ExperimentEditorPage";
 import KnowledgeGraphPage from "@/pages/project/KnowledgeGraphPage";
 import PaperDetailsPage from "@/pages/project/paper/PaperDetailsPage";
+import LoginPage from "@/pages/LoginPage";
+import RegisterPage from "@/pages/RegisterPage";
 
 export const router = createBrowserRouter([
+  {
+    path: "/login",
+    element: <LoginPage />,
+  },
+  {
+    path: "/register",
+    element: <RegisterPage />,
+  },
   {
     path: "/",
     element: <ProjectsPage />,
