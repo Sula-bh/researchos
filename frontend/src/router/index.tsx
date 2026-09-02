@@ -14,6 +14,7 @@ import KnowledgeGraphPage from "@/pages/project/KnowledgeGraphPage";
 import PaperDetailsPage from "@/pages/project/paper/PaperDetailsPage";
 import LoginPage from "@/pages/LoginPage";
 import RegisterPage from "@/pages/RegisterPage";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 export const router = createBrowserRouter([
   {
@@ -24,66 +25,72 @@ export const router = createBrowserRouter([
     path: "/register",
     element: <RegisterPage />,
   },
+
   {
-    path: "/",
-    element: <ProjectsPage />,
-  },
-  {
-    path: "/projects/:projectId",
-    element: <ProjectPage />,
+    element: <ProtectedRoute />,
     children: [
       {
-        index: true,
-        element: <OverviewPage />,
+        path: "/",
+        element: <ProjectsPage />,
       },
       {
-        path: "papers",
+        path: "/projects/:projectId",
+        element: <ProjectPage />,
         children: [
           {
             index: true,
-            element: <PapersPage />,
+            element: <OverviewPage />,
           },
           {
-            path: ":paperId",
-            element: <PaperDetailsPage />,
+            path: "papers",
+            children: [
+              {
+                index: true,
+                element: <PapersPage />,
+              },
+              {
+                path: ":paperId",
+                element: <PaperDetailsPage />,
+              },
+            ],
+          },
+          {
+            path: "chat",
+            element: <ChatPage />,
+          },
+          {
+            path: "notes",
+            element: <NotesPage />,
+          },
+          {
+            path: "notes/new",
+            element: <NoteEditorPage />,
+          },
+          {
+            path: "notes/:noteId",
+            element: <NoteEditorPage />,
+          },
+          {
+            path: "timeline",
+            element: <TimelinePage />,
+          },
+          {
+            path: "experiments",
+            element: <ExperimentsPage />,
+          },
+          {
+            path: "experiments/new",
+            element: <ExperimentEditorPage />,
+          },
+          {
+            path: "experiments/:experimentId",
+            element: <ExperimentEditorPage />,
+          },
+          {
+            path: "graph",
+            element: <KnowledgeGraphPage />,
           },
         ],
-      },
-      {
-        path: "chat",
-        element: <ChatPage />,
-      },
-      {
-        path: "notes",
-        element: <NotesPage />,
-      },
-      {
-        path: "notes/new",
-        element: <NoteEditorPage />,
-      },
-      {
-        path: "notes/:noteId",
-        element: <NoteEditorPage />,
-      },
-      {
-        path: "timeline",
-        element: <TimelinePage />,
-      },
-      {
-        path: "experiments",
-        element: <ExperimentsPage />,
-      },
-      {
-        path: "experiments/new",
-        element: <ExperimentEditorPage />,
-      },
-      {
-        path: "experiments/:experimentId",
-        element: <ExperimentEditorPage />,
-      },
-      {
-        path: "graph",
-        element: <KnowledgeGraphPage />,
       },
     ],
   },
