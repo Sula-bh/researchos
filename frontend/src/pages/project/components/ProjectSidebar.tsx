@@ -1,16 +1,28 @@
+import { useEffect, useState } from "react";
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
 import {
   BrainCircuit,
   FileText,
   FlaskConical,
   Home,
+  FolderOpen,
   MessageSquare,
   NotebookPen,
   Settings,
   ChevronsUpDown,
+  Check,
 } from "lucide-react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 import type { Project } from "@/types/project";
+
+import { getProjects } from "@/api/projectApi";
 
 type ProjectSidebarProps = {
   project?: Project;
@@ -45,6 +57,28 @@ const navItems = [
 ];
 
 export default function ProjectSidebar({ project }: ProjectSidebarProps) {
+  const navigate = useNavigate();
+  const projectId = project?.id;
+
+  const [projects, setProjects] = useState<Project[]>([]);
+
+  useEffect(() => {
+    const loadProjects = async () => {
+      try {
+        const data = await getProjects();
+        setProjects(data);
+      } catch (error) {
+        console.error("Failed to load projects", error);
+      }
+    };
+
+    loadProjects();
+  }, []);
+
+  const handleProjectSwitch = (newProjectId: string) => {
+    navigate(`/projects/${newProjectId}`);
+  };
+
   return (
     <aside className="flex h-screen w-67.5 shrink-0 flex-col border-r border-[#e6e1ff] bg-white shadow-[14px_0_45px_rgba(72,56,178,0.05)]">
       {/* Logo */}
@@ -64,23 +98,67 @@ export default function ProjectSidebar({ project }: ProjectSidebarProps) {
 
       {/* Current Project */}
 
-      <div className="border-b border-[#eeeaff] p-4">
-        <button className="flex w-full items-center justify-between gap-3 rounded-[14px] border border-[#e1dcff] bg-[#fbfaff] px-3 py-3 transition-colors hover:bg-[#f4f1ff]">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-[#5b3df2] shadow-sm">
-            <BrainCircuit className="h-5 w-5" />
-          </span>
+      <Popover>
+        <PopoverTrigger>
+          <div className="border-b border-[#eeeaff] p-4">
+            <button className="flex w-full items-center justify-between gap-3 rounded-[14px] border border-[#e1dcff] bg-[#fbfaff] px-3 py-3 transition-colors hover:bg-[#f4f1ff]">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-[#5b3df2] shadow-sm">
+                <FolderOpen className="h-5 w-5" />
+              </span>
 
-          <div className="min-w-0 flex-1 text-left">
-            <p className="truncate text-sm font-semibold text-[#111832]">
-              {project?.title ?? "Loading..."}
+              <div className="min-w-0 flex-1 text-left">
+                <p className="truncate text-sm font-semibold text-[#111832]">
+                  {project?.title ?? "Loading..."}
+                </p>
+
+                <p className="text-xs text-[#65708c]">Current project</p>
+              </div>
+
+              <ChevronsUpDown className="h-4 w-4 shrink-0 text-[#65708c]" />
+            </button>
+          </div>
+        </PopoverTrigger>
+
+        <PopoverContent
+          align="start"
+          sideOffset={8}
+          className="w-64 rounded-[18px] border border-[#e6e1ff] bg-white p-2 shadow-[0_24px_80px_rgba(72,56,178,0.16)]"
+        >
+          <div className="mb-2 px-2 py-1">
+            <p className="text-xs font-semibold uppercase tracking-wide text-[#8a91a8]">
+              Switch project
             </p>
-
-            <p className="text-xs text-[#65708c]">Current project</p>
           </div>
 
-          <ChevronsUpDown className="h-4 w-4 shrink-0 text-[#65708c]" />
-        </button>
-      </div>
+          <div className="space-y-1">
+            {projects.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => handleProjectSwitch(item.id)}
+                className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left transition-colors ${
+                  item.id === projectId
+                    ? "bg-[#f1efff] text-[#4f35f2]"
+                    : "text-[#4b5875] hover:bg-[#f8f6ff]"
+                }`}
+              >
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold">{item.title}</p>
+
+                  {item.description && (
+                    <p className="mt-0.5 truncate text-xs text-[#8a91a8]">
+                      {item.description}
+                    </p>
+                  )}
+                </div>
+
+                {item.id === projectId && (
+                  <Check className="ml-2 h-4 w-4 shrink-0" />
+                )}
+              </button>
+            ))}
+          </div>
+        </PopoverContent>
+      </Popover>
 
       {/* Navigation */}
 
