@@ -1,5 +1,6 @@
 from flask import Flask
 
+from app.auth import get_current_user
 from app.config import Config
 from app.error_handlers import register_error_handlers
 from app.extensions import cors, db, migrate
@@ -45,4 +46,15 @@ def create_app():
     def home():
         return {"message": "ResearchOS API is running!"}
 
+    @app.get("/auth/me")
+    def auth_me():
+        user = get_current_user()
+
+        if user is None:
+            return {"error": "Unauthorized"}, 401
+
+        return {
+            "message": "Authenticated successfully",
+            "user_id": user.get("sub"),
+        }, 200
     return app
