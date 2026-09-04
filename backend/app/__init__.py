@@ -55,6 +55,8 @@ def create_app():
 
         return {
             "message": "Authenticated successfully",
-            "user_id": user.get("sub"),
+            "user_id": str(user.id),
+            "clerk_user_id": user.clerk_user_id,
         }, 200
+
     return app
