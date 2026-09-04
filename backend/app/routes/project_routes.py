@@ -3,6 +3,7 @@ from uuid import UUID
 
 from flask import Blueprint, request
 
+from app.auth import get_current_user
 from app.responses import success_response
 from app.schemas.project_schema import (
     ProjectCreateSchema,
@@ -24,9 +25,15 @@ project_update_schema = ProjectUpdateSchema()
 
 @project_bp.post("")
 def create_project():
+    user = get_current_user()
+
+    if user is None:
+        return {"error": "Unauthorized"}, HTTPStatus.UNAUTHORIZED
+
     data = project_create_schema.load(request.get_json())
 
     project = project_service.create_project(
+        user_id=user.id,
         title=data["title"],
         description=data.get("description"),
     )
@@ -40,7 +47,14 @@ def create_project():
 
 @project_bp.get("")
 def get_projects():
-    projects = project_service.get_projects()
+    user = get_current_user()
+
+    if user is None:
+        return {"error": "Unauthorized"}, HTTPStatus.UNAUTHORIZED
+
+    projects = project_service.get_projects(
+        user_id=user.id,
+    )
 
     return success_response(
         data=project_response_schema.dump(projects, many=True),
@@ -49,7 +63,15 @@ def get_projects():
 
 @project_bp.get("/<uuid:project_id>")
 def get_project(project_id: UUID):
-    project = project_service.get_project(project_id)
+    user = get_current_user()
+
+    if user is None:
+        return {"error": "Unauthorized"}, HTTPStatus.UNAUTHORIZED
+
+    project = project_service.get_project(
+        project_id=project_id,
+        user_id=user.id,
+    )
 
     return success_response(
         data=project_response_schema.dump(project),
@@ -58,10 +80,16 @@ def get_project(project_id: UUID):
 
 @project_bp.patch("/<uuid:project_id>")
 def update_project(project_id: UUID):
+    user = get_current_user()
+
+    if user is None:
+        return {"error": "Unauthorized"}, HTTPStatus.UNAUTHORIZED
+
     data = project_update_schema.load(request.get_json())
 
     project = project_service.update_project(
         project_id=project_id,
+        user_id=user.id,
         title=data.get("title"),
         description=data.get("description"),
     )
@@ -74,7 +102,15 @@ def update_project(project_id: UUID):
 
 @project_bp.delete("/<uuid:project_id>")
 def delete_project(project_id: UUID):
-    project_service.delete_project(project_id)
+    user = get_current_user()
+
+    if user is None:
+        return {"error": "Unauthorized"}, HTTPStatus.UNAUTHORIZED
+
+    project_service.delete_project(
+        project_id=project_id,
+        user_id=user.id,
+    )
 
     return success_response(
         message="Project deleted successfully.",
