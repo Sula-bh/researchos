@@ -9,8 +9,13 @@ import {
   Search,
   Sparkles,
 } from "lucide-react";
+import { UserButton, useUser } from "@clerk/react";
 
 import { getProjects } from "@/api/projectApi";
+import { getPapers } from "@/api/paperApi";
+import { getExperiments } from "@/api/experimentApi";
+import { getNotes } from "@/api/noteApi";
+
 import { Input } from "@/components/ui/input";
 import type { Project } from "@/types/project";
 
@@ -22,6 +27,8 @@ import DeleteProjectDialog from "./components/DeleteProjectDialog";
 import ProjectCardSkeleton from "./components/ProjectCardSkeleton";
 
 export default function ProjectsPage() {
+  const { user } = useUser();
+
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -30,11 +37,52 @@ export default function ProjectsPage() {
 
   const [deletingProject, setDeletingProject] = useState<Project | null>(null);
 
+  const [stats, setStats] = useState({
+    projects: 0,
+    papers: 0,
+    experiments: 0,
+    notes: 0,
+  });
+
   async function loadProjects() {
     try {
       setLoading(true);
+
       const data = await getProjects();
+
       setProjects(data);
+
+      const projectStats = await Promise.all(
+        data.map(async (project) => {
+          const [papers, experiments, notes] = await Promise.all([
+            getPapers(project.id),
+            getExperiments(project.id),
+            getNotes(project.id),
+          ]);
+
+          return {
+            papers: papers.length,
+            experiments: experiments.length,
+            notes: notes.length,
+          };
+        }),
+      );
+
+      setStats({
+        projects: data.length,
+        papers: projectStats.reduce(
+          (total, project) => total + project.papers,
+          0,
+        ),
+        experiments: projectStats.reduce(
+          (total, project) => total + project.experiments,
+          0,
+        ),
+        notes: projectStats.reduce(
+          (total, project) => total + project.notes,
+          0,
+        ),
+      });
     } catch (error) {
       console.error(error);
     } finally {
@@ -52,31 +100,31 @@ export default function ProjectsPage() {
     );
   }, [projects, search]);
 
-  const stats = [
+  const statsList = [
     {
       label: "Projects",
-      value: projects.length,
+      value: stats.projects,
       icon: FolderOpen,
       color: "text-[#5b3df2]",
       bg: "bg-[#f1efff]",
     },
     {
       label: "Papers",
-      value: "-",
+      value: stats.papers,
       icon: FileText,
       color: "text-[#0ea5e9]",
       bg: "bg-[#eaf7ff]",
     },
     {
       label: "Experiments",
-      value: "-",
+      value: stats.experiments,
       icon: FlaskConical,
       color: "text-[#10b981]",
       bg: "bg-[#e9fbf3]",
     },
     {
       label: "Notes",
-      value: "-",
+      value: stats.notes,
       icon: NotebookPen,
       color: "text-[#f59e0b]",
       bg: "bg-[#fff7e8]",
@@ -87,9 +135,10 @@ export default function ProjectsPage() {
     <main className="flex min-h-screen bg-[#fbfaff] text-[#111832]">
       <section className="min-w-0 flex-1 p-5 sm:p-7">
         <div className="mx-auto max-w-7xl space-y-6">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <div className="flex items-center gap-3 border-b border-[#eeeaff] px-6 py-5">
+          {/* Header */}
+          <div className="flex flex-col gap-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
                 <span className="flex h-10 w-10 items-center justify-center rounded-[14px] bg-[#5b3df2] text-white shadow-[0_12px_24px_rgba(91,61,242,0.22)]">
                   <BrainCircuit className="h-6 w-6" />
                 </span>
@@ -99,26 +148,52 @@ export default function ProjectsPage() {
                 </span>
               </div>
 
-              <h1 className="text-3xl mt-4 font-bold tracking-tight">
-                Welcome back, Researcher
-              </h1>
+              <div className="flex items-center gap-3 rounded-2xl bg-white px-3 py-2 shadow-[0_8px_24px_rgba(72,56,178,0.06)]">
+                <UserButton
+                  appearance={{
+                    elements: {
+                      avatarBox: "h-9 w-9",
+                    },
+                  }}
+                />
 
-              <p className="mt-2 text-sm text-[#65708c]">
-                Here is what's happening with your research.
-              </p>
+                <div className="hidden min-w-0 sm:block">
+                  <p className="max-w-40 truncate text-sm font-semibold text-[#111832]">
+                    {user?.fullName || user?.firstName || "User"}
+                  </p>
+
+                  <p className="max-w-40 truncate text-xs text-[#65708c]">
+                    {user?.primaryEmailAddress?.emailAddress || ""}
+                  </p>
+                </div>
+              </div>
             </div>
 
-            <CreateProjectDialog
-              onCreated={(project) =>
-                setProjects((previous) => [project, ...previous])
-              }
-            />
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <h1 className="text-3xl font-bold tracking-tight">
+                  Welcome back, {user?.firstName || "Researcher"}
+                </h1>
+
+                <p className="mt-2 text-sm text-[#65708c]">
+                  Here is what's happening with your research.
+                </p>
+              </div>
+
+              <CreateProjectDialog
+                onCreated={(project) =>
+                  setProjects((previous) => [project, ...previous])
+                }
+              />
+            </div>
           </div>
 
+          {/* Projects */}
           <div className="rounded-2xl border border-[#e1dcff] bg-white p-5 shadow-[0_18px_50px_rgba(72,56,178,0.07)]">
             <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h2 className="font-bold">Your Projects</h2>
+
                 <p className="mt-1 text-sm text-[#65708c]">
                   Continue working across your research spaces.
                 </p>
@@ -160,9 +235,14 @@ export default function ProjectsPage() {
 
                   <div className="mt-8">
                     <CreateProjectDialog
-                      onCreated={(project) =>
-                        setProjects((previous) => [project, ...previous])
-                      }
+                      onCreated={(project) => {
+                        setProjects((previous) => [project, ...previous]);
+
+                        setStats((previous) => ({
+                          ...previous,
+                          projects: previous.projects + 1,
+                        }));
+                      }}
                     />
                   </div>
                 </div>
@@ -193,8 +273,9 @@ export default function ProjectsPage() {
             )}
           </div>
 
+          {/* Stats */}
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            {stats.map(({ label, value, icon: Icon, color, bg }) => (
+            {statsList.map(({ label, value, icon: Icon, color, bg }) => (
               <div
                 key={label}
                 className="rounded-[14px] border border-[#e1dcff] bg-white p-5 shadow-[0_16px_40px_rgba(72,56,178,0.06)]"
@@ -212,6 +293,7 @@ export default function ProjectsPage() {
                 </div>
 
                 <p className="mt-2 text-2xl font-bold">{value}</p>
+
                 <p className="mt-1 text-xs font-semibold text-[#10b981]">
                   Active workspace
                 </p>
@@ -219,6 +301,7 @@ export default function ProjectsPage() {
             ))}
           </div>
 
+          {/* Recent Activity + AI Insight */}
           <div className="grid gap-5 lg:grid-cols-[1.5fr_1fr]">
             <div className="rounded-2xl border border-[#e1dcff] bg-white p-5 shadow-[0_18px_50px_rgba(72,56,178,0.06)]">
               <h2 className="font-bold">Recent Activity</h2>
@@ -259,6 +342,7 @@ export default function ProjectsPage() {
             <div className="rounded-2xl border border-[#e1dcff] bg-white p-5 shadow-[0_18px_50px_rgba(72,56,178,0.06)]">
               <div className="flex items-center gap-2 text-[#5b3df2]">
                 <Sparkles className="h-5 w-5" />
+
                 <h2 className="font-bold">AI Research Insight</h2>
               </div>
 
@@ -269,13 +353,15 @@ export default function ProjectsPage() {
               </p>
 
               <div className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#4f35f2]">
-                View Details <ArrowRight className="h-4 w-4" />
+                View Details
+                <ArrowRight className="h-4 w-4" />
               </div>
             </div>
           </div>
         </div>
       </section>
 
+      {/* Edit Project */}
       <EditProjectDialog
         project={editingProject}
         onClose={() => setEditingProject(null)}
@@ -288,6 +374,7 @@ export default function ProjectsPage() {
         }}
       />
 
+      {/* Delete Project */}
       <DeleteProjectDialog
         project={deletingProject}
         onClose={() => setDeletingProject(null)}
