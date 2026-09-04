@@ -24,6 +24,8 @@ import type { Project } from "@/types/project";
 
 import { getProjects } from "@/api/projectApi";
 
+import { UserButton, useUser } from "@clerk/react";
+
 type ProjectSidebarProps = {
   project?: Project;
 };
@@ -57,6 +59,7 @@ const navItems = [
 ];
 
 export default function ProjectSidebar({ project }: ProjectSidebarProps) {
+  const { user } = useUser();
   const navigate = useNavigate();
   const projectId = project?.id;
 
@@ -99,24 +102,24 @@ export default function ProjectSidebar({ project }: ProjectSidebarProps) {
       {/* Current Project */}
 
       <Popover>
-        <PopoverTrigger>
-          <div className="border-b border-[#eeeaff] p-4">
-            <button className="flex w-full items-center justify-between gap-3 rounded-[14px] border border-[#e1dcff] bg-[#fbfaff] px-3 py-3 transition-colors hover:bg-[#f4f1ff]">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-[#5b3df2] shadow-sm">
-                <FolderOpen className="h-5 w-5" />
+        <PopoverTrigger className="w-full border-b border-[#eeeaff] p-4">
+          <span className="flex w-full items-center justify-between gap-3 rounded-[14px] border border-[#e1dcff] bg-[#fbfaff] px-3 py-3 transition-colors hover:bg-[#f4f1ff]">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-[#5b3df2] shadow-sm">
+              <FolderOpen className="h-5 w-5" />
+            </span>
+
+            <span className="min-w-0 flex-1 text-left">
+              <span className="block truncate text-sm font-semibold text-[#111832]">
+                {project?.title ?? "Loading..."}
               </span>
 
-              <div className="min-w-0 flex-1 text-left">
-                <p className="truncate text-sm font-semibold text-[#111832]">
-                  {project?.title ?? "Loading..."}
-                </p>
+              <span className="block text-xs text-[#65708c]">
+                Current project
+              </span>
+            </span>
 
-                <p className="text-xs text-[#65708c]">Current project</p>
-              </div>
-
-              <ChevronsUpDown className="h-4 w-4 shrink-0 text-[#65708c]" />
-            </button>
-          </div>
+            <ChevronsUpDown className="h-4 w-4 shrink-0 text-[#65708c]" />
+          </span>
         </PopoverTrigger>
 
         <PopoverContent
@@ -187,11 +190,30 @@ export default function ProjectSidebar({ project }: ProjectSidebarProps) {
       </nav>
 
       {/* Footer */}
+      <div className="border-t border-[#eeeaff] p-3 space-y-2">
+        <div className="flex items-center gap-3 rounded-2xl bg-[#f5f2ff] px-3 py-3 transition-colors hover:bg-[#eeeaff]">
+          <UserButton
+            appearance={{
+              elements: {
+                avatarBox: "h-9 w-9",
+              },
+            }}
+          />
 
-      <div className="border-t border-[#eeeaff] p-3">
+          <div className="min-w-0">
+            <p className="truncate text-sm font-medium text-foreground">
+              {user?.fullName || user?.firstName || "User"}
+            </p>
+
+            <p className="truncate text-xs text-muted-foreground">
+              {user?.primaryEmailAddress?.emailAddress || ""}
+            </p>
+          </div>
+        </div>
+
         <button className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-[#4b5875] transition-colors hover:bg-[#f8f6ff] hover:text-[#2415ac]">
           <Settings className="h-4 w-4" />
-          Project Settings
+          <span>Project Settings</span>
         </button>
       </div>
     </aside>
