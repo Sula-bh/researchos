@@ -16,11 +16,13 @@ from sqlalchemy import select
 
 knowledge_service = KnowledgeService()
 
+
 class ChatService:
     async def chat(
         self,
         *,
         project_id: UUID,
+        user_id: UUID,
         message: str,
     ) -> dict:
         message = message.strip()
@@ -28,7 +30,11 @@ class ChatService:
         if not message:
             raise EmptyMessageError()
 
-        get_project(project_id)
+        # Verify that this project belongs to the current user.
+        get_project(
+            project_id=project_id,
+            user_id=user_id,
+        )
 
         statement = (
             select(Paper)
@@ -40,7 +46,7 @@ class ChatService:
 
         if not completed_papers:
             raise NoProcessedPapersError()
-        
+
         datasets = [
             knowledge_service.dataset_name(
                 project_id=paper.project_id,
@@ -57,7 +63,7 @@ class ChatService:
         if not results:
             raise NoAnswerFoundError()
 
-        message = knowledge_service.format_results(results)
+        formatted_message = knowledge_service.format_results(results)
 
         sources = [
             {
@@ -68,6 +74,6 @@ class ChatService:
         ]
 
         return {
-            "message": message,
+            "message": formatted_message,
             "sources": sources,
         }
