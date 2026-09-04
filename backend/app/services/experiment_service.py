@@ -12,6 +12,7 @@ from app.models.project import Project
 
 def create_experiment(
     project_id: UUID,
+    user_id: UUID,
     title: str,
     objective: str = "",
     methodology: str = "",
@@ -19,7 +20,12 @@ def create_experiment(
     conclusion: str = "",
     status: ExperimentStatus = ExperimentStatus.DRAFT,
 ) -> Experiment:
-    project = db.session.get(Project, project_id)
+    project = db.session.scalar(
+        select(Project).where(
+            Project.id == project_id,
+            Project.user_id == user_id,
+        )
+    )
 
     if project is None:
         raise ProjectNotFoundError()
@@ -40,18 +46,37 @@ def create_experiment(
     return experiment
 
 
-def get_experiments(project_id: UUID) -> list[Experiment]:
+def get_experiments(
+    project_id: UUID,
+    user_id: UUID,
+) -> list[Experiment]:
     statement = (
         select(Experiment)
-        .where(Experiment.project_id == project_id)
+        .join(Project, Experiment.project_id == Project.id)
+        .where(
+            Experiment.project_id == project_id,
+            Project.user_id == user_id,
+        )
         .order_by(Experiment.updated_at.desc())
     )
 
     return db.session.scalars(statement).all()
 
 
-def get_experiment(experiment_id: UUID) -> Experiment:
-    experiment = db.session.get(Experiment, experiment_id)
+def get_experiment(
+    experiment_id: UUID,
+    user_id: UUID,
+) -> Experiment:
+    statement = (
+        select(Experiment)
+        .join(Project, Experiment.project_id == Project.id)
+        .where(
+            Experiment.id == experiment_id,
+            Project.user_id == user_id,
+        )
+    )
+
+    experiment = db.session.scalar(statement)
 
     if experiment is None:
         raise ExperimentNotFoundError()
@@ -61,15 +86,13 @@ def get_experiment(experiment_id: UUID) -> Experiment:
 
 def update_experiment(
     experiment_id: UUID,
+    user_id: UUID,
     **kwargs,
 ) -> Experiment:
-    experiment = db.session.get(
-        Experiment,
-        experiment_id,
+    experiment = get_experiment(
+        experiment_id=experiment_id,
+        user_id=user_id,
     )
-
-    if experiment is None:
-        raise ExperimentNotFoundError()
 
     for key, value in kwargs.items():
         if value is not None:
@@ -82,14 +105,12 @@ def update_experiment(
 
 def delete_experiment(
     experiment_id: UUID,
+    user_id: UUID,
 ) -> None:
-    experiment = db.session.get(
-        Experiment,
-        experiment_id,
+    experiment = get_experiment(
+        experiment_id=experiment_id,
+        user_id=user_id,
     )
-
-    if experiment is None:
-        raise ExperimentNotFoundError()
 
     db.session.delete(experiment)
     db.session.commit()
