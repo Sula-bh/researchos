@@ -26,7 +26,7 @@ class Project(UUIDMixin, TimestampMixin, db.Model):
     user_id: Mapped[uuid.UUID] = mapped_column(
         db.UUID(as_uuid=True),
         db.ForeignKey("users.id"),
-        nullable=False,
+        nullable=True,
         index=True,
     )
 
