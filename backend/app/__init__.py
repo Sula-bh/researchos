@@ -46,7 +46,7 @@ def create_app():
     def home():
         return {"message": "ResearchOS API is running!"}
 
-    @app.get("/auth/me")
+    @app.get("/api/auth/me")
     def auth_me():
         user = get_current_user()
 
