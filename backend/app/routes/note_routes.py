@@ -3,6 +3,7 @@ from uuid import UUID
 
 from flask import Blueprint, request
 
+from app.auth import get_current_user
 from app.responses import success_response
 from app.schemas.note_schema import (
     NoteCreateSchema,
@@ -24,10 +25,16 @@ response_schema = NoteResponseSchema()
 
 @note_bp.post("/projects/<uuid:project_id>/notes")
 def create_note(project_id: UUID):
+    user = get_current_user()
+
+    if user is None:
+        return {"error": "Unauthorized"}, HTTPStatus.UNAUTHORIZED
+
     data = create_schema.load(request.get_json())
 
     note = note_service.create_note(
         project_id=project_id,
+        user_id=user.id,
         title=data["title"],
         content=data["content"],
     )
@@ -41,7 +48,15 @@ def create_note(project_id: UUID):
 
 @note_bp.get("/projects/<uuid:project_id>/notes")
 def get_notes(project_id: UUID):
-    notes = note_service.get_notes(project_id)
+    user = get_current_user()
+
+    if user is None:
+        return {"error": "Unauthorized"}, HTTPStatus.UNAUTHORIZED
+
+    notes = note_service.get_notes(
+        project_id=project_id,
+        user_id=user.id,
+    )
 
     return success_response(
         data=response_schema.dump(notes, many=True),
@@ -50,7 +65,15 @@ def get_notes(project_id: UUID):
 
 @note_bp.get("/notes/<uuid:note_id>")
 def get_note(note_id: UUID):
-    note = note_service.get_note(note_id)
+    user = get_current_user()
+
+    if user is None:
+        return {"error": "Unauthorized"}, HTTPStatus.UNAUTHORIZED
+
+    note = note_service.get_note(
+        note_id=note_id,
+        user_id=user.id,
+    )
 
     return success_response(
         data=response_schema.dump(note),
@@ -59,10 +82,16 @@ def get_note(note_id: UUID):
 
 @note_bp.patch("/notes/<uuid:note_id>")
 def update_note(note_id: UUID):
+    user = get_current_user()
+
+    if user is None:
+        return {"error": "Unauthorized"}, HTTPStatus.UNAUTHORIZED
+
     data = update_schema.load(request.get_json())
 
     note = note_service.update_note(
         note_id=note_id,
+        user_id=user.id,
         title=data.get("title"),
         content=data.get("content"),
     )
@@ -75,7 +104,15 @@ def update_note(note_id: UUID):
 
 @note_bp.delete("/notes/<uuid:note_id>")
 def delete_note(note_id: UUID):
-    note_service.delete_note(note_id)
+    user = get_current_user()
+
+    if user is None:
+        return {"error": "Unauthorized"}, HTTPStatus.UNAUTHORIZED
+
+    note_service.delete_note(
+        note_id=note_id,
+        user_id=user.id,
+    )
 
     return success_response(
         message="Note deleted successfully.",
