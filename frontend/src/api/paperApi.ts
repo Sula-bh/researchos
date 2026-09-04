@@ -30,10 +30,17 @@ export async function deletePaper(paperId: string): Promise<void> {
   await api.delete(`/papers/${paperId}`);
 }
 
-export function openPaper(paperId: string): void {
-  window.open(
-    `${api.defaults.baseURL}/papers/${paperId}/download`,
-    "_blank",
-    "noopener,noreferrer",
-  );
+export async function openPaper(paperId: string): Promise<void> {
+  const response = await api.get(`/papers/${paperId}/download`, {
+    responseType: "blob",
+  });
+
+  const blobUrl = URL.createObjectURL(response.data);
+
+  window.open(blobUrl, "_blank", "noopener,noreferrer");
+
+  // Give the new tab time to load the blob before releasing it.
+  setTimeout(() => {
+    URL.revokeObjectURL(blobUrl);
+  }, 60_000);
 }
