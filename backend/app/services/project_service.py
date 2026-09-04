@@ -7,8 +7,13 @@ from app.extensions import db
 from app.models.project import Project
 
 
-def create_project(title: str, description: str | None = None) -> Project:
+def create_project(
+    user_id: UUID,
+    title: str,
+    description: str | None = None,
+) -> Project:
     project = Project(
+        user_id=user_id,
         title=title,
         description=description,
     )
@@ -19,14 +24,26 @@ def create_project(title: str, description: str | None = None) -> Project:
     return project
 
 
-def get_projects() -> list[Project]:
-    statement = select(Project).order_by(Project.created_at.desc())
+def get_projects(user_id: UUID) -> list[Project]:
+    statement = (
+        select(Project)
+        .where(Project.user_id == user_id)
+        .order_by(Project.created_at.desc())
+    )
 
     return db.session.scalars(statement).all()
 
 
-def get_project(project_id: UUID) -> Project:
-    project = db.session.get(Project, project_id)
+def get_project(
+    project_id: UUID,
+    user_id: UUID,
+) -> Project:
+    statement = select(Project).where(
+        Project.id == project_id,
+        Project.user_id == user_id,
+    )
+
+    project = db.session.scalar(statement)
 
     if project is None:
         raise ProjectNotFoundError()
@@ -35,12 +52,15 @@ def get_project(project_id: UUID) -> Project:
 
 
 def update_project(
-    project_id: UUID, title: str | None = None, description: str | None = None
+    project_id: UUID,
+    user_id: UUID,
+    title: str | None = None,
+    description: str | None = None,
 ) -> Project:
-    project = get_project(project_id)
-
-    if project is None:
-        raise ProjectNotFoundError()
+    project = get_project(
+        project_id=project_id,
+        user_id=user_id,
+    )
 
     if title is not None:
         project.title = title
@@ -53,11 +73,14 @@ def update_project(
     return project
 
 
-def delete_project(project_id: UUID) -> None:
-    project = get_project(project_id)
-
-    if project is None:
-        raise ProjectNotFoundError()
+def delete_project(
+    project_id: UUID,
+    user_id: UUID,
+) -> None:
+    project = get_project(
+        project_id=project_id,
+        user_id=user_id,
+    )
 
     db.session.delete(project)
     db.session.commit()
