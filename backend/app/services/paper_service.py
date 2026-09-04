@@ -12,6 +12,7 @@ from app.exceptions.file import InvalidFileError
 from app.exceptions.paper import PaperNotFoundError
 from app.extensions import db
 from app.models.paper import Paper
+from app.models.project import Project
 from app.queue import default_queue
 from app.services.pdf_service import parse_pdf
 from app.services.storage_service import (
@@ -24,18 +25,37 @@ from app.services.storage_service import (
 logger = logging.getLogger(__name__)
 
 
-def get_papers(project_id: UUID) -> list[Paper]:
+def get_papers(
+    project_id: UUID,
+    user_id: UUID,
+) -> list[Paper]:
     statement = (
         select(Paper)
-        .where(Paper.project_id == project_id)
+        .join(Project, Paper.project_id == Project.id)
+        .where(
+            Paper.project_id == project_id,
+            Project.user_id == user_id,
+        )
         .order_by(Paper.created_at.desc())
     )
 
     return db.session.scalars(statement).all()
 
 
-def get_paper(paper_id: UUID) -> Paper:
-    paper = db.session.get(Paper, paper_id)
+def get_paper(
+    paper_id: UUID,
+    user_id: UUID,
+) -> Paper:
+    statement = (
+        select(Paper)
+        .join(Project, Paper.project_id == Project.id)
+        .where(
+            Paper.id == paper_id,
+            Project.user_id == user_id,
+        )
+    )
+
+    paper = db.session.scalar(statement)
 
     if paper is None:
         raise PaperNotFoundError()
@@ -43,7 +63,22 @@ def get_paper(paper_id: UUID) -> Paper:
     return paper
 
 
-def upload_paper(project_id: UUID, file: FileStorage) -> Paper:
+def upload_paper(
+    project_id: UUID,
+    user_id: UUID,
+    file: FileStorage,
+) -> Paper:
+    # Verify that the project belongs to the current user.
+    project = db.session.scalar(
+        select(Project).where(
+            Project.id == project_id,
+            Project.user_id == user_id,
+        )
+    )
+
+    if project is None:
+        raise PaperNotFoundError()
+
     storage_key, file_name = save_pdf(
         str(project_id),
         file,
@@ -72,8 +107,14 @@ def upload_paper(project_id: UUID, file: FileStorage) -> Paper:
     return paper
 
 
-def delete_paper(paper_id: UUID) -> None:
-    paper = get_paper(paper_id)
+def delete_paper(
+    paper_id: UUID,
+    user_id: UUID,
+) -> None:
+    paper = get_paper(
+        paper_id=paper_id,
+        user_id=user_id,
+    )
 
     dataset_name = knowledge_service.dataset_name(
         project_id=paper.project_id,
@@ -98,8 +139,14 @@ def delete_paper(paper_id: UUID) -> None:
     db.session.commit()
 
 
-def download_paper(paper_id: UUID):
-    paper = get_paper(paper_id)
+def download_paper(
+    paper_id: UUID,
+    user_id: UUID,
+):
+    paper = get_paper(
+        paper_id=paper_id,
+        user_id=user_id,
+    )
 
     if not file_exists(paper.storage_key):
         raise InvalidFileError("Paper file not found.")

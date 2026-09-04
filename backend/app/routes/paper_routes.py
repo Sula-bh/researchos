@@ -3,6 +3,7 @@ from uuid import UUID
 
 from flask import Blueprint, request
 
+from app.auth import get_current_user
 from app.exceptions.file import InvalidFileError
 from app.responses import success_response
 from app.schemas.paper_schema import PaperResponseSchema
@@ -16,7 +17,15 @@ single_paper_schema = PaperResponseSchema()
 
 @paper_bp.get("/projects/<uuid:project_id>/papers")
 def get_papers(project_id: UUID):
-    papers = paper_service.get_papers(project_id)
+    user = get_current_user()
+
+    if user is None:
+        return {"error": "Unauthorized"}, HTTPStatus.UNAUTHORIZED
+
+    papers = paper_service.get_papers(
+        project_id=project_id,
+        user_id=user.id,
+    )
 
     return success_response(
         data=paper_response_schema.dump(papers),
@@ -25,7 +34,15 @@ def get_papers(project_id: UUID):
 
 @paper_bp.get("/papers/<uuid:paper_id>")
 def get_paper(paper_id: UUID):
-    paper = paper_service.get_paper(paper_id)
+    user = get_current_user()
+
+    if user is None:
+        return {"error": "Unauthorized"}, HTTPStatus.UNAUTHORIZED
+
+    paper = paper_service.get_paper(
+        paper_id=paper_id,
+        user_id=user.id,
+    )
 
     return success_response(
         data=single_paper_schema.dump(paper),
@@ -34,19 +51,33 @@ def get_paper(paper_id: UUID):
 
 @paper_bp.get("/papers/<uuid:paper_id>/download")
 def download_paper(paper_id: UUID):
-    return paper_service.download_paper(paper_id)
+    user = get_current_user()
+
+    if user is None:
+        return {"error": "Unauthorized"}, HTTPStatus.UNAUTHORIZED
+
+    return paper_service.download_paper(
+        paper_id=paper_id,
+        user_id=user.id,
+    )
 
 
 @paper_bp.post("/projects/<uuid:project_id>/papers")
 def upload_paper(project_id: UUID):
+    user = get_current_user()
+
+    if user is None:
+        return {"error": "Unauthorized"}, HTTPStatus.UNAUTHORIZED
+
     file = request.files.get("file")
 
     if file is None:
         raise InvalidFileError("No file provided.")
 
     paper = paper_service.upload_paper(
-        project_id,
-        file,
+        project_id=project_id,
+        user_id=user.id,
+        file=file,
     )
 
     return success_response(
@@ -58,7 +89,15 @@ def upload_paper(project_id: UUID):
 
 @paper_bp.delete("/papers/<uuid:paper_id>")
 def delete_paper(paper_id: UUID):
-    paper_service.delete_paper(paper_id)
+    user = get_current_user()
+
+    if user is None:
+        return {"error": "Unauthorized"}, HTTPStatus.UNAUTHORIZED
+
+    paper_service.delete_paper(
+        paper_id=paper_id,
+        user_id=user.id,
+    )
 
     return success_response(
         message="Paper deleted successfully.",
