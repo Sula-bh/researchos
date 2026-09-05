@@ -211,7 +211,10 @@ export default function ProjectSidebar({ project }: ProjectSidebarProps) {
           </div>
         </div>
 
-        <button className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-[#4b5875] transition-colors hover:bg-[#f8f6ff] hover:text-[#2415ac]">
+        <button
+          onClick={() => navigate(`/projects/${projectId}/settings`)}
+          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-[#4b5875] transition-colors hover:bg-[#f8f6ff] hover:text-[#2415ac]"
+        >
           <Settings className="h-4 w-4" />
           <span>Project Settings</span>
         </button>

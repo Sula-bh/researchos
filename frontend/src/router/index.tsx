@@ -16,6 +16,7 @@ import LoginPage from "@/pages/LoginPage";
 import RegisterPage from "@/pages/RegisterPage";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import LandingPage from "@/pages/LandingPage";
+import ProjectSettingsPage from "@/pages/project/ProjectSettingsPage";
 
 export const router = createBrowserRouter([
   {
@@ -94,6 +95,10 @@ export const router = createBrowserRouter([
           {
             path: "graph",
             element: <KnowledgeGraphPage />,
+          },
+          {
+            path: "settings",
+            element: <ProjectSettingsPage />,
           },
         ],
       },
