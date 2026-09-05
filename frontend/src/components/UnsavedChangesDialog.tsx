@@ -24,11 +24,13 @@ export default function UnsavedChangesDialog({
 }: UnsavedChangesDialogProps) {
   return (
     <AlertDialog open={open}>
-      <AlertDialogContent>
+      <AlertDialogContent className="rounded-[18px] border-[#dcd7ff] bg-white p-7 shadow-[0_24px_80px_rgba(72,56,178,0.18)] sm:max-w-lg">
         <AlertDialogHeader>
-          <AlertDialogTitle>You have unsaved changes</AlertDialogTitle>
+          <AlertDialogTitle className="text-xl font-bold text-[#111832]">
+            You have unsaved changes
+          </AlertDialogTitle>
 
-          <AlertDialogDescription>
+          <AlertDialogDescription className="text-[#65708c]">
             Save your changes before leaving this page?
           </AlertDialogDescription>
         </AlertDialogHeader>
