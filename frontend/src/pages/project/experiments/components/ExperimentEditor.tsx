@@ -90,13 +90,54 @@ export default function ExperimentEditor({
                 onStatusChange(value as ExperimentStatus)
               }
             >
-              <SelectTrigger className="w-44">
+              <SelectTrigger
+                className="
+      h-9 w-40
+      rounded-xl
+      border-[#e1dcff]
+      bg-[#fbfaff]
+      px-3
+      text-sm
+      font-semibold
+      text-[#4b5875]
+      shadow-sm
+      transition-colors
+      hover:bg-[#f4f1ff]
+      focus:ring-2
+      focus:ring-[#7459ff]/20
+      focus:ring-offset-0
+    "
+              >
                 <SelectValue />
               </SelectTrigger>
 
-              <SelectContent>
+              <SelectContent
+                className="
+      w-40
+      rounded-2xl
+      border-[#e1dcff]
+      bg-white
+      p-1.5
+      shadow-[0_20px_60px_rgba(72,56,178,0.14)]
+    "
+              >
                 {EXPERIMENT_STATUSES.map((status) => (
-                  <SelectItem key={status} value={status}>
+                  <SelectItem
+                    key={status}
+                    value={status}
+                    className="
+          rounded-lg
+          px-3
+          py-2
+          text-sm
+          font-medium
+          text-[#4b5875]
+          outline-none
+          transition-colors
+          focus:bg-[#f1efff]
+          focus:text-[#4f35f2]
+        "
+                  >
                     {status}
                   </SelectItem>
                 ))}
