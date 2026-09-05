@@ -65,6 +65,9 @@ export default function ProjectSidebar({ project }: ProjectSidebarProps) {
 
   const [projects, setProjects] = useState<Project[]>([]);
 
+  const currentProject =
+    projects.find((item) => item.id === projectId) ?? project;
+
   useEffect(() => {
     const loadProjects = async () => {
       try {
@@ -76,6 +79,28 @@ export default function ProjectSidebar({ project }: ProjectSidebarProps) {
     };
 
     loadProjects();
+  }, []);
+
+  useEffect(() => {
+    const handleProjectUpdated = (event: Event) => {
+      const customEvent = event as CustomEvent<Project>;
+      const updatedProject = customEvent.detail;
+
+      setProjects((previous) =>
+        previous.map((item) =>
+          item.id === updatedProject.id ? updatedProject : item,
+        ),
+      );
+    };
+
+    window.addEventListener("researchos:project-updated", handleProjectUpdated);
+
+    return () => {
+      window.removeEventListener(
+        "researchos:project-updated",
+        handleProjectUpdated,
+      );
+    };
   }, []);
 
   const handleProjectSwitch = (newProjectId: string) => {
@@ -110,7 +135,7 @@ export default function ProjectSidebar({ project }: ProjectSidebarProps) {
 
             <span className="min-w-0 flex-1 text-left">
               <span className="block truncate text-sm font-semibold text-[#111832]">
-                {project?.title ?? "Loading..."}
+                {currentProject?.title ?? "Loading..."}
               </span>
 
               <span className="block text-xs text-[#65708c]">

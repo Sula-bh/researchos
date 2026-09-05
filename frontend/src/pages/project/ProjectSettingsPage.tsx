@@ -8,6 +8,7 @@ import {
   Save,
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "sonner";
 
 import { getProject, updateProject } from "@/api/projectApi";
 import { getPapers } from "@/api/paperApi";
@@ -87,8 +88,17 @@ export default function ProjectSettingsPage() {
       });
 
       setProject(updatedProject);
+
+      toast.success("Project updated successfully.");
+
+      window.dispatchEvent(
+        new CustomEvent("researchos:project-updated", {
+          detail: updatedProject,
+        }),
+      );
     } catch (error) {
       console.error(error);
+      toast.error("Failed to update project.");
     } finally {
       setSaving(false);
     }
